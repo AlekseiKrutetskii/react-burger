@@ -1,0 +1,9 @@
+.app {
+    width: 1280px;
+    margin: 0 auto;
+}
+
+.appmain {
+    display: flex;
+    min-height: 0;
+}

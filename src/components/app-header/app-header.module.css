@@ -11,7 +11,7 @@
     list-style: none;
 }
 
-.navitem {
+.nav-item {
     composes: header;
     color: white;
     text-decoration: none;
