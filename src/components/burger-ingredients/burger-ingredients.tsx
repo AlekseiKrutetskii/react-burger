@@ -34,7 +34,7 @@ function BurgerIngredients(props) {
                     {props.data
                         .filter(item => category.type === item.type)
                         .map(item =>
-                            <div key={item._id} className={`mb-8 ${styles.item}`}>
+                            <div key={item._id} className={`mb-8 ${styles.item}`} onClick={props.handleOpenModal} data-modaltype='Ingredients' data-item={JSON.stringify(item)}>
                                 <Counter count={1} size="default" />
                                 <img className="pl-4 pr-4 mb-1" src={item.image} alt={item.name}/>
                                 <span className="text text_type_digits-default mb-1 price">{item.price} <CurrencyIcon type="primary" /></span>
@@ -54,5 +54,6 @@ function BurgerIngredients(props) {
 export default BurgerIngredients;
 
 BurgerIngredients.propTypes = {
-    data: PropTypes.array
+    data: PropTypes.array,
+    handleOpenModal: PropTypes.func
 };
