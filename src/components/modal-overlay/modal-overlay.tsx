@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './modal-overlay.module.css';
+import PropTypes from "prop-types";
 
 function ModalOverlay(props) {
     return (
@@ -10,3 +11,9 @@ function ModalOverlay(props) {
 }
 
 export default ModalOverlay;
+
+ModalOverlay.propTypes = {
+    handleCloseModal: PropTypes.func,
+    children: PropTypes.element
+};
+

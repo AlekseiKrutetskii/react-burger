@@ -11,7 +11,7 @@ function App() {
     const[data, setData] = useState([]);
     const[visible,setVisible] = useState(false);
     const[typeModal, setTypeModal] = useState('');
-    const[product, setProduct] = useState(null);
+    const[product, setProduct] = useState({});
     const api = 'https://norma.nomoreparties.space/api/ingredients';
 
     const handleOpenModal = (e) => {
@@ -61,7 +61,8 @@ function App() {
         }
     )
 
-    const modal = (typeModal === 'Order') ? <Modal handleCloseModal={handleCloseModal}><OrderDetails /></Modal> : <Modal header="Детали ингредиента" handleCloseModal={handleCloseModal}><IngredientDetails {...product} /></Modal>
+    const modal = (typeModal === 'Ingredients' && product !== null) ? <Modal header="Детали ингредиента" handleCloseModal={handleCloseModal}>
+        <IngredientDetails {...product} /></Modal> : <Modal handleCloseModal={handleCloseModal}><OrderDetails /></Modal>
 
     return (
         <div className={styles.app}>

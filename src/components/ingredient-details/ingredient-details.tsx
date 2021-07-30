@@ -1,8 +1,8 @@
 import React from 'react';
 import styles from './ingredient-details.module.css'
+import PropTypes from "prop-types";
 
 function IngredientDetails(props) {
-    console.log(props)
     return (
         <div className={styles.wrap}>
             <img className={styles.img + " pl-4 pr-4 mb-4"} src={props.image_large} alt={props.name}/>
@@ -18,3 +18,19 @@ function IngredientDetails(props) {
 }
 
 export default IngredientDetails;
+
+IngredientDetails.propTypes = {
+    calories: PropTypes.number,
+    carbohydrates: PropTypes.number,
+    fat: PropTypes.number,
+    image: PropTypes.string,
+    image_large: PropTypes.string,
+    image_mobile: PropTypes.string,
+    name: PropTypes.string,
+    price: PropTypes.number,
+    proteins: PropTypes.number,
+    type: PropTypes.string,
+    __v: PropTypes.number,
+    _id: PropTypes.string,
+};
+
