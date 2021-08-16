@@ -6,46 +6,37 @@ import BurgerConstructor from "../burger-constructor/burger-constructor";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import OrderDetails from "../order-details/order-details";
+import {current} from "../../services/reducers/current";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../services/reducers";
+
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
+import {sendOrder} from "../../services/reducers/order";
 
 function App() {
-    const[data, setData] = useState([]);
+    const dispatch = useDispatch();
     const[visible,setVisible] = useState(false);
     const[typeModal, setTypeModal] = useState('');
-    const[product, setProduct] = useState({});
-    const api = 'https://norma.nomoreparties.space/api/ingredients';
+    const product = useSelector((store: RootState) => store.current.cur)
+    const data = useSelector((store: RootState) => store.constructors.items)
 
     const handleOpenModal = (e) => {
         if (e.currentTarget.dataset.modaltype && e.currentTarget.dataset.modaltype.toString() === "Ingredients") {
             setTypeModal("Ingredients")
-            setProduct(JSON.parse(e.currentTarget.dataset.item))
+            dispatch(current.actions.add(JSON.parse(e.currentTarget.dataset.item)))
         } else {
+            var ingredients = data.map(item => item._id)
+            dispatch(sendOrder(JSON.stringify({ingredients})))
             setTypeModal("Order")
         }
-        //setTypeModal((e.currentTarget.value == 'submit')?'setTypeModal':'Ingredients')
-        //console.log(e.currentTarget.dataset.modaltype); // should return Tagvalue
-        //console.log(e.target.attributes.getNamedItem('data-modaltype'))
         setVisible(true)
     }
 
     const handleCloseModal = () => {
         setVisible(false)
+        dispatch(current.actions.del())
     }
-
-    useEffect(() => {
-            fetch(api)
-                .then((response) => {
-                    if (!response.ok) throw new Error()
-                    else return response.json()
-                })
-                .then((response) => {
-                    setData(response.data)
-                })
-                .catch((error) => {
-                    console.log('error: ' + error)
-                })
-        },
-        []
-    )
 
     const handleKeyPress = (e) => {
         if (visible && e.key === "Escape") {
@@ -67,10 +58,12 @@ function App() {
     return (
         <div className={styles.app}>
             <AppHeader />
-            <main className={styles['app-main']}>
-                <BurgerIngredients data={data} handleOpenModal={handleOpenModal} />
-                <BurgerConstructor data={data} handleOpenModal={handleOpenModal}/>
-            </main>
+            <DndProvider backend={HTML5Backend}>
+                <main className={styles['app-main']}>
+                    <BurgerIngredients handleOpenModal={handleOpenModal} />
+                    <BurgerConstructor handleOpenModal={handleOpenModal}/>
+                </main>
+            </DndProvider>
             {visible && modal}
         </div>
     )
