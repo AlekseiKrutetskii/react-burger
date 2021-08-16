@@ -15,6 +15,7 @@ function BurgerConstructor(props) {
     const amount = data.reduce(function(previousValue, currentValue, index, array) {
         return previousValue + currentValue.price * ((currentValue.type === "bun") ? 2 : 1);
     }, 0)
+    const isBun = data.filter(item => item.type === "bun").length
 
     const [, drop] = useDrop(
         () => ({
@@ -46,7 +47,7 @@ function BurgerConstructor(props) {
             }
             <ul className={`${styles['item-wrap']}`}>
             {data.filter(item => item.type !== 'bun').map((item, index) => {
-                return <ConstructorItem key={item.customId} item={item} index={index+1} id={item.customId} moveConstructorItem={moveConstructorItem} />
+                return <ConstructorItem key={item.customId} item={item} index={index+isBun} id={item.customId} moveConstructorItem={moveConstructorItem} />
             })}
             </ul>
             {
