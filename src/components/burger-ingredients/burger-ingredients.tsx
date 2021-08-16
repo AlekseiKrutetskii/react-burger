@@ -4,7 +4,7 @@ import styles from './burger-ingredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../services/reducers";
-import {fetchIngredients} from "../../services/reducers/ingredients";
+import {fetchIngredients} from "../../services/slices/ingredients";
 import IngredientsItem from "./ingredients-item";
 
 function BurgerIngredients(props) {

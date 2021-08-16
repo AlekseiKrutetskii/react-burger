@@ -6,13 +6,13 @@ import BurgerConstructor from "../burger-constructor/burger-constructor";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import OrderDetails from "../order-details/order-details";
-import {current} from "../../services/reducers/current";
+import {current} from "../../services/slices/current";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../services/reducers";
 
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
-import {sendOrder} from "../../services/reducers/order";
+import {sendOrder} from "../../services/slices/order";
 
 function App() {
     const dispatch = useDispatch();
@@ -25,12 +25,14 @@ function App() {
         if (e.currentTarget.dataset.modaltype && e.currentTarget.dataset.modaltype.toString() === "Ingredients") {
             setTypeModal("Ingredients")
             dispatch(current.actions.add(JSON.parse(e.currentTarget.dataset.item)))
-        } else {
+            setVisible(true)
+        } else if (data.filter(item => item.type === "bun").length === 1) {
             var ingredients = data.map(item => item._id)
             dispatch(sendOrder(JSON.stringify({ingredients})))
             setTypeModal("Order")
+            setVisible(true)
         }
-        setVisible(true)
+
     }
 
     const handleCloseModal = () => {

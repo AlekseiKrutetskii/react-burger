@@ -1,12 +1,22 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {CheckMarkIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from './order-details.module.css'
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../services/reducers";
+import {constructors} from "../../services/slices/constructors";
 
 function OrderDetails() {
+    const dispatch = useDispatch();
     const order = useSelector((store: RootState) => store.order.order)
-    const number = (order.order !== undefined) ? order.order.number : '----'
+    var number = '----';
+    if (order.order !== undefined) {
+        number = order.order.number
+    }
+    useEffect(() => {
+        return () => {
+            dispatch(constructors.actions.clear())
+        }
+    }, [dispatch])
 
     return (
         <div className={styles.wrap}>

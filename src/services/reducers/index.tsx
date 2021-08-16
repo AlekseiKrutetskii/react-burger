@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import { ingredients } from './ingredients'
-import { current } from './current'
-import { order } from './order'
-import {constructors} from "./constructors";
+import { ingredients } from '../slices/ingredients'
+import { current } from '../slices/current'
+import { order } from '../slices/order'
+import {constructors} from "../slices/constructors";
 
 export const rootReducer = combineReducers({
     ingredients: ingredients.reducer,

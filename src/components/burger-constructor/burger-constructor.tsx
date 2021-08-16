@@ -1,25 +1,20 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback} from 'react';
 import PropTypes from 'prop-types';
 import styles from "./burger-construction.module.css";
 import {ConstructorElement, CurrencyIcon, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../services/reducers";
 import { useDrop } from 'react-dnd';
-import {constructors} from "../../services/reducers/constructors";
+import {constructors} from "../../services/slices/constructors";
 import ConstructorItem from "./constructor-item";
 import update from 'immutability-helper';
 
 function BurgerConstructor(props) {
-    const [amount, setAmount] = useState(0);
     const dispatch = useDispatch();
     const data = useSelector((store: RootState) => store.constructors.items)
-
-    useEffect(() =>
-    {
-        setAmount(data.reduce(function(previousValue, currentValue, index, array) {
-            return previousValue + currentValue.price * ((currentValue.type === "bun") ? 2 : 1);
-        }, 0))
-    }, [data])
+    const amount = data.reduce(function(previousValue, currentValue, index, array) {
+        return previousValue + currentValue.price * ((currentValue.type === "bun") ? 2 : 1);
+    }, 0)
 
     const [, drop] = useDrop(
         () => ({
@@ -45,17 +40,17 @@ function BurgerConstructor(props) {
     return (
         <section className={`pt-25 ${styles.ingredients}`} ref={drop}>
             {
-                data.filter(item => item.type === 'bun').map((item, index) => {
+                data.filter(item => item.type === 'bun').map((item) => {
                     return (<div key={item.customId +'top'} className="ml-8 mb-4"><ConstructorElement type="top" isLocked={true} text={item.name + ' (верх)'} price={item.price} thumbnail={item.image} /></div>)
                 })
             }
             <ul className={`${styles['item-wrap']}`}>
             {data.filter(item => item.type !== 'bun').map((item, index) => {
-                return <ConstructorItem key={item.customId} item={item} index={index} id={item.customId} moveConstructorItem={moveConstructorItem} />
+                return <ConstructorItem key={item.customId} item={item} index={index+1} id={item.customId} moveConstructorItem={moveConstructorItem} />
             })}
             </ul>
             {
-                data.filter(item => item.type === 'bun').map((item, index) => {
+                data.filter(item => item.type === 'bun').map((item) => {
                     return <div key={item.customId +'bottom'} className="ml-8 mt-4"><ConstructorElement type="bottom" isLocked={true} text={item.name + ' (низ)'} price={item.price} thumbnail={item.image} /></div>
                 })
             }

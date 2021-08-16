@@ -40,7 +40,6 @@ export const order = createSlice({
         builder.addCase(sendOrder.fulfilled, (state, action) => {
             state.order = action.payload
             state.loading = 'idle'
-
         });
         builder.addCase(sendOrder.rejected, (state) => {
             state.loading = 'idle'

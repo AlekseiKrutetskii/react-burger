@@ -1,7 +1,7 @@
 import React, {useRef} from 'react';
 import PropTypes from "prop-types";
 import {ConstructorElement, DragIcon} from "@ya.praktikum/react-developer-burger-ui-components";
-import {constructors} from "../../services/reducers/constructors";
+import {constructors} from "../../services/slices/constructors";
 import {useDispatch} from "react-redux";
 import {useDrag, useDrop} from 'react-dnd';
 

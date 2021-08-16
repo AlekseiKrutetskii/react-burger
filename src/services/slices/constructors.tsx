@@ -51,8 +51,13 @@ export const constructors = createSlice({
         },
         update: (state, action) => {
             state.items = action.payload
+        },
+        clear: (state) => {
+            console.log('clear')
+            state.items = []
+            state.count = []
         }
     }
 });
 
-export const { add, del, update } = constructors.actions;
+export const { add, del, update, clear } = constructors.actions;
