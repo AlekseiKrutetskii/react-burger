@@ -1,34 +1,63 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback} from 'react';
 import PropTypes from 'prop-types';
 import styles from "./burger-construction.module.css";
-import {ConstructorElement, CurrencyIcon, Button, DragIcon} from "@ya.praktikum/react-developer-burger-ui-components";
+import {ConstructorElement, CurrencyIcon, Button} from "@ya.praktikum/react-developer-burger-ui-components";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../services/reducers";
+import { useDrop } from 'react-dnd';
+import {constructors} from "../../services/slices/constructors";
+import ConstructorItem from "./constructor-item";
+import update from 'immutability-helper';
 
 function BurgerConstructor(props) {
-    const[bun, setBun] = useState('');
+    const dispatch = useDispatch();
+    const data = useSelector((store: RootState) => store.constructors.items)
+    const amount = data.reduce(function(previousValue, currentValue, index, array) {
+        return previousValue + currentValue.price * ((currentValue.type === "bun") ? 2 : 1);
+    }, 0)
+    const isBun = data.filter(item => item.type === "bun").length
 
-    useEffect(()=>{
-        setBun('60d3b41abdacab0026a733c6')
-    }, [])
+    const [, drop] = useDrop(
+        () => ({
+            accept: 'items',
+            drop: (item:any) => {
+                dispatch(constructors.actions.add(item))
+            }
+        })
+    )
+
+    const moveConstructorItem = useCallback((dragIndex, hoverIndex) => {
+        const dragConstructorItem = data[dragIndex];
+        dispatch(constructors.actions.update(
+            (update(data, {
+                $splice: [
+                    [dragIndex, 1],
+                    [hoverIndex, 0, dragConstructorItem],
+                ],
+            }))
+        ))
+    }, [data, dispatch]);
 
     return (
-        <section className={`pt-25 ${styles.ingredients}`}>
-            {props.data.filter(item => item._id === bun).map((item, index) => {
-                    return <div key={item._id +'top'} className="ml-8 mb-4"><ConstructorElement type="top" isLocked={true} text={item.name + ' (верх)'} price={item.price} thumbnail={item.image} /></div>
+        <section className={`pt-25 ${styles.ingredients}`} ref={drop}>
+            {
+                data.filter(item => item.type === 'bun').map((item) => {
+                    return (<div key={item.customId +'top'} className="ml-8 mb-4"><ConstructorElement type="top" isLocked={true} text={item.name + ' (верх)'} price={item.price} thumbnail={item.image} /></div>)
                 })
             }
             <ul className={`${styles['item-wrap']}`}>
-                {props.data.filter(item => item.type !== 'bun').map((item, index) => {
-                        return <li key={item._id} className="mb-4" data-modaltype='Ingredients' data-item={JSON.stringify(item)}><DragIcon type="primary" /><ConstructorElement text={item.name} price={item.price} thumbnail={item.image} /></li>
-                     })
-                }
+            {data.filter(item => item.type !== 'bun').map((item, index) => {
+                return <ConstructorItem key={item.customId} item={item} index={index+isBun} id={item.customId} moveConstructorItem={moveConstructorItem} />
+            })}
             </ul>
-            {props.data.filter(item => item._id === bun).map((item, index) => {
-                return <div key={item._id +'bottom'} className="ml-8 mt-4"><ConstructorElement type="bottom" isLocked={true} text={item.name + ' (низ)'} price={item.price} thumbnail={item.image} /></div>
-            })
+            {
+                data.filter(item => item.type === 'bun').map((item) => {
+                    return <div key={item.customId +'bottom'} className="ml-8 mt-4"><ConstructorElement type="bottom" isLocked={true} text={item.name + ' (низ)'} price={item.price} thumbnail={item.image} /></div>
+                })
             }
             <div className={`${styles.total} mt-10`}>
                 <span className={`${styles['total-price']} text text_type_digits-medium mr-10`}>
-                    610 <CurrencyIcon type="primary" />
+                    {amount} <CurrencyIcon type="primary" />
                 </span>
                 <Button type="primary" size="large" onClick={props.handleOpenModal}>
                     Оформить заказ
@@ -41,6 +70,5 @@ function BurgerConstructor(props) {
 export default BurgerConstructor;
 
 BurgerConstructor.propTypes = {
-    data: PropTypes.array,
     handleOpenModal: PropTypes.func
 };
