@@ -1,0 +1,11 @@
+.wrap {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+}
+
+.link {
+    text-decoration: none;
+    color: #4C4EF6;
+}

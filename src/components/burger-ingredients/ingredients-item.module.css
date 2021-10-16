@@ -16,3 +16,8 @@
 .item svg {
     margin-left: 9px;
 }
+
+.link {
+    text-decoration: none;
+    color: white;
+}

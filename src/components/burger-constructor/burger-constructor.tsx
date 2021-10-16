@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styles from "./burger-construction.module.css";
 import {ConstructorElement, CurrencyIcon, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../services/reducers";
+import {history, RootState} from "../../services/reducers";
 import { useDrop } from 'react-dnd';
 import {constructors} from "../../services/slices/constructors";
 import ConstructorItem from "./constructor-item";
@@ -38,6 +38,14 @@ function BurgerConstructor(props) {
         ))
     }, [data, dispatch]);
 
+
+    const isLoading = useSelector((store: RootState) => store.user.loading)
+    const isAuth = useSelector((store: RootState) => !!store.user.data)
+
+    if (isLoading === 'loading') {
+        return null
+    }
+
     return (
         <section className={`pt-25 ${styles.ingredients}`} ref={drop}>
             {
@@ -59,9 +67,10 @@ function BurgerConstructor(props) {
                 <span className={`${styles['total-price']} text text_type_digits-medium mr-10`}>
                     {amount} <CurrencyIcon type="primary" />
                 </span>
-                <Button type="primary" size="large" onClick={props.handleOpenModal}>
-                    Оформить заказ
-                </Button>
+                {
+                    isAuth ? <Button type="primary" size="large" onClick={props.handleOpenModal}>Оформить заказ</Button>
+                    :<Button type="primary" size="large" onClick={()=>{history.push('/login')}}>Оформить заказ</Button>
+                }
             </div>
         </section>
     )
