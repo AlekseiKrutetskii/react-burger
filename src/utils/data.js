@@ -212,3 +212,5 @@ const data = [
 ]
 
 export default data;
+
+export const apiURL = 'https://norma.nomoreparties.space/api/'

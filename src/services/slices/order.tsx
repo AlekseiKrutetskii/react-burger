@@ -1,7 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {fetchWithRefresh, getCookie} from "../../utils/utils";
-
-const api = 'https://norma.nomoreparties.space/api/orders';
+import {apiURL} from "../../utils/data";
 
 interface OrderState {
     order: any,
@@ -19,7 +18,7 @@ export const sendOrder = createAsyncThunk(
 
         const token = getCookie('accessToken');
         if (token) {
-            const data = fetchWithRefresh(api,
+            const data = fetchWithRefresh(apiURL+'orders',
                 {
                     method: 'POST',
                     headers: {

@@ -6,6 +6,7 @@ import ProtectedRoute from "../components/protected-route/protected-route";
 import {logoutUser, setUserData} from "../services/slices/user";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchWithRefresh, getCookie} from "../utils/utils";
+import {apiURL} from "../utils/data";
 
 export function ProfilePage() {
     const curName = useSelector((store) => store.user.data.name)
@@ -41,8 +42,9 @@ export function ProfilePage() {
         })));
     }
 
-    const updateUser = () => {
-        fetchWithRefresh ('https://norma.nomoreparties.space/api/auth/user', {
+    const onSubmitHandle = (e) => {
+        e.preventDefault()
+        fetchWithRefresh (apiURL+'auth/user', {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -75,17 +77,15 @@ export function ProfilePage() {
                     <></>
                 </ProtectedRoute>
                 <Route>
-                    <div className={styles.form + " pb-20"}>
+                    <form onSubmit={onSubmitHandle} className={styles.form + " pb-20"}>
                         <Input type={'text'} placeholder={'Имя'} onChange={e => setValueName(e.target.value)} value={valueName} name={'name'} ref={inputNameRef} size={'default'} /><br />
                         <Input type={'text'} placeholder={'E-mail'} onChange={e => setValueEmail(e.target.value)} value={valueEmail} name={'email'} ref={inputEmailRef} size={'default'} /><br />
                         <Input icon={typePassword.icon} type={typePassword.type} placeholder={'Пароль'} onChange={e => setValuePassword(e.target.value)} onIconClick={showPassword} value={valuePassword} name={'password'} ref={inputPasswordRef} size={'default'} /><br />
                         <p className="text text_type_main-default">
                             <span className={styles.button + " mr-10"} onClick={handleOnClick}>Отмена</span>
-                            <Button type="primary" size="medium" onClick={updateUser}>
-                                Сохранить
-                            </Button>
+                            <Button type="primary" size="medium">Сохранить</Button>
                         </p>
-                    </div>
+                    </form>
                 </Route>
             </Switch>
 

@@ -4,6 +4,7 @@ import styles from './reset-password.module.css'
 import {Input, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import {useSelector} from "react-redux";
 import {history} from "../services/reducers";
+import {apiURL} from "../utils/data";
 
 export function ResetPasswordPage() {
     const [valueToken, setValueToken] = useState('')
@@ -20,8 +21,9 @@ export function ResetPasswordPage() {
 
     }
 
-    const handleOnClick = async () => {
-        await fetch('https://norma.nomoreparties.space/api/password-reset/reset', {
+    const onSubmitHandle = async (e) => {
+        e.preventDefault()
+        await fetch(apiURL+'password-reset/reset', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -56,11 +58,11 @@ export function ResetPasswordPage() {
     return (
         <div className={styles.wrap + " pt-20"}>
             <p className="text text_type_main-medium pb-10">Восстановление пароля</p>
-            <Input icon={typePassword.icon} type={typePassword.type} placeholder={'Введите новый пароль'} onChange={e => setValuePassword(e.target.value)} onIconClick={showPassword} value={valuePassword} name={'password'} ref={inputPasswordRef} size={'default'} /><br />
-            <Input type={'text'} placeholder={'Введите код из письма'} onChange={e => setValueToken(e.target.value)} value={valueToken} name={'code'} ref={inputTokenRef} size={'default'} /><br />
-            <Button type="primary" size="medium" onClick={handleOnClick}>
-                Сохранить
-            </Button>
+            <form onSubmit={onSubmitHandle} className={styles.wrap}>
+                <Input icon={typePassword.icon} type={typePassword.type} placeholder={'Введите новый пароль'} onChange={e => setValuePassword(e.target.value)} onIconClick={showPassword} value={valuePassword} name={'password'} ref={inputPasswordRef} size={'default'} /><br />
+                <Input type={'text'} placeholder={'Введите код из письма'} onChange={e => setValueToken(e.target.value)} value={valueToken} name={'code'} ref={inputTokenRef} size={'default'} /><br />
+                <Button type="primary" size="medium">Сохранить</Button>
+            </form>
             <p className="text text_type_main-default pt-20">Вспомнили пароль? <Link className={styles.link} to={{ pathname: `/login/` }}>Войти</Link></p>
         </div>
     )

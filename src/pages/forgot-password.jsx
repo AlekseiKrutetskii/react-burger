@@ -33,7 +33,8 @@ export function ForgotPasswordPage() {
         }
     }
 
-    const onClick = async () => {
+    const onSubmitHandle = async (e) => {
+        e.preventDefault()
         if (!error && valueEmail !== '') {
             localStorage.setItem('forgot', true)
 
@@ -71,8 +72,10 @@ export function ForgotPasswordPage() {
     return (
         <div className={styles.wrap + " pt-20"}>
             <p className="text text_type_main-medium pb-10">Восстановление пароля</p>
-            <Input type={'text'} placeholder={'Укажите e-mail'} error={error} errorText={errorText} onChange={handleOnChange} onBlur={handleOnBlur} value={valueEmail} name={'email'} ref={inputEmailRef} size={'default'} /><br />
-            <Button type="primary" size="medium" onClick={onClick}>Восстановить</Button>
+            <form onSubmit={onSubmitHandle} className={styles.wrap}>
+                <Input type={'text'} placeholder={'Укажите e-mail'} error={error} errorText={errorText} onChange={handleOnChange} onBlur={handleOnBlur} value={valueEmail} name={'email'} ref={inputEmailRef} size={'default'} /><br />
+                <Button type="primary" size="medium">Восстановить</Button>
+            </form>
             <p className="text text_type_main-default pt-20">Вспомнили пароль? <Link className={styles.link} to={{ pathname: `/login/` }}>Войти</Link></p>
         </div>
     )

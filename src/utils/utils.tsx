@@ -1,9 +1,11 @@
+import {apiURL} from "./data";
+
 export const checkReponse = (res) => {
     return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 };
 
 export const refreshToken = () => {
-    return fetch(`https://norma.nomoreparties.space/api/auth/token`, {
+    return fetch(apiURL+'auth/token', {
         method: "POST",
         headers: {
             "Content-Type": "application/json;charset=utf-8",

@@ -25,8 +25,7 @@ function App() {
     const[typeModal, setTypeModal] = useState('');
     const product = useSelector((store: RootState) => store.current.cur)
     const data = useSelector((store: RootState) => store.constructors.items)
-    //const isAuth = useSelector((store: RootState) => !!store.user.data)
-    //const action = useSelector((store: RootState) => store.router.action)
+    const background = (history.action === 'PUSH' || history.action === 'REPLACE') ? (location.state && location.state.background) : null;
 
     const handleOpenModal = (e) => {
         if (e.currentTarget.dataset.modaltype && e.currentTarget.dataset.modaltype.toString() === "Ingredients") {
@@ -43,12 +42,16 @@ function App() {
     }
 
     const handleCloseModal = () => {
-        setVisible(false)
-        dispatch(current.actions.del())
+        if (!visible) {
+            history.goBack();console.log('presIngredientss')
+        } else {
+            setVisible(false)
+            dispatch(current.actions.del())
+        }
     }
 
     const handleKeyPress = (e) => {
-        if (visible && e.key === "Escape") {
+        if ((visible||background) && e.key === "Escape") {
              handleCloseModal()
         }
     }
@@ -61,8 +64,8 @@ function App() {
         }
     )
 
-    console.log(history)
-    console.log(location)
+    //console.log(history)
+    //console.log(location)
     /*
     * / - главная страница, конструктор бургеров.
     * /login - страница авторизации.
@@ -75,60 +78,39 @@ function App() {
     *
     */
 
-    let background = (history.action === 'PUSH' || history.action === 'REPLACE') ? (location.state && location.state.background) : null;
-    const modal = (typeModal === 'Ingredients' && product !== null) ? <Modal header="Детали ингредиента" handleCloseModal={handleCloseModal}>
+    const modal = (typeModal === 'Ingredients' && product !== null) ? <Modal handleCloseModal={handleCloseModal}>
         <IngredientDetails {...product} /></Modal> : <Modal handleCloseModal={handleCloseModal}><OrderDetails /></Modal>
 
     return (
-        <div>
+        <div className={styles.app}>
+            <AppHeader />
             <Switch location={background || location}>
                 <Route path="/" exact={true}>
-                    <div className={styles.app}>
-                        <AppHeader />
-                        <DndProvider backend={HTML5Backend}>
-                            <main className={styles['app-main']}>
-                                <BurgerIngredients handleOpenModal={handleOpenModal} />
-                                <BurgerConstructor handleOpenModal={handleOpenModal}/>
-                            </main>
-                        </DndProvider>
-                        {visible && modal}
-                    </div>
+                    <DndProvider backend={HTML5Backend}>
+                        <main className={styles['app-main']}>
+                            <BurgerIngredients handleOpenModal={handleOpenModal} />
+                            <BurgerConstructor handleOpenModal={handleOpenModal}/>
+                        </main>
+                    </DndProvider>
+                    {visible && modal}
                 </Route>
                 <Route path="/login">
-                    <div className={styles.app}>
-                        <AppHeader />
-                        <LoginPage />
-                    </div>
+                    <LoginPage />
                 </Route>
                 <Route path="/register">
-                    <div className={styles.app}>
-                        <AppHeader />
-                        <RegisterPage/>
-                    </div>
+                    <RegisterPage/>
                 </Route>
                 <Route path="/forgot-password">
-                    <div className={styles.app}>
-                        <AppHeader />
-                        <ForgotPasswordPage/>
-                    </div>
+                    <ForgotPasswordPage/>
                 </Route>
                 <Route path="/reset-password">
-                    <div className={styles.app}>
-                        <AppHeader />
-                        <ResetPasswordPage/>
-                    </div>
+                    <ResetPasswordPage/>
                 </Route>
                 <ProtectedRoute path="/profile">
-                    <div className={styles.app}>
-                        <AppHeader />
-                        <ProfilePage/>
-                    </div>
+                    <ProfilePage/>
                 </ProtectedRoute>
                 <Route path={`/ingredients/:id`}>
-                    <div className={styles.app}>
-                        <AppHeader />
-                        <IngredientDetails />
-                    </div>
+                    <IngredientDetails />
                 </Route>
                 <Route>
                     <></>
@@ -136,8 +118,8 @@ function App() {
             </Switch>
 
             {/* Show the modal when a background page is set */}
-            {background && <Route path="/ingredients/:id" children={<Modal header="Детали ингредиента" handleCloseModal={handleCloseModal}>
-                <IngredientDetails handleCloseModal={handleCloseModal} {...product} /></Modal>} />}
+            {background && <Route path="/ingredients/:id" children={<Modal handleCloseModal={handleCloseModal}>
+                <IngredientDetails {...product} /></Modal>} />}
         </div>
     )
 }

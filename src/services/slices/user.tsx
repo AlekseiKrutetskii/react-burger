@@ -1,6 +1,7 @@
 import {AnyAction, createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {push} from "connected-react-router";
 import {getCookie, setCookie, fetchWithRefresh, deleteCookie} from '../../utils/utils'
+import {apiURL} from "../../utils/data";
 
 export type AuthUser = {
     email: string,
@@ -22,7 +23,7 @@ export const sliceName = "user";
 export const registerUser = createAsyncThunk(
     `${sliceName}/registerUser`,
     async (registerData:any, {dispatch}) => {
-        const response = await fetch('https://norma.nomoreparties.space/api/auth/register',
+        const response = await fetch(apiURL+'auth/register',
             {
                 method: 'POST',
                 headers: {
@@ -32,6 +33,8 @@ export const registerUser = createAsyncThunk(
             })
         const data = await response.json()
         dispatch(push('/login'))
+        if (data.success)
+            localStorage.setItem('refreshToken', data.refreshToken)
         return data
     }
 )
@@ -40,7 +43,7 @@ export const loginUser = createAsyncThunk(
     `${sliceName}/loginUser`,
     async (loginData:any, {dispatch}) => {
 
-        const response = await fetch('https://norma.nomoreparties.space/api/auth/login',
+        const response = await fetch(apiURL+'auth/login',
             {
                 method: 'POST',
                 headers: {
@@ -49,7 +52,7 @@ export const loginUser = createAsyncThunk(
                 body: loginData
             })
         const data = await response.json()
-        dispatch(push('/'))
+        //dispatch(push('/'))
         if (data.success)
             localStorage.setItem('refreshToken', data.refreshToken)
         return data
@@ -60,7 +63,7 @@ export const logoutUser = createAsyncThunk(
     `${sliceName}/logoutUser`,
     async (logoutData:any, {dispatch}) => {
 
-        const response = await fetch('https://norma.nomoreparties.space/api/auth/logout',
+        const response = await fetch(apiURL+'auth/logout',
             {
                 method: 'POST',
                 headers: {
@@ -79,7 +82,7 @@ export const getUser = createAsyncThunk<AnyAction>(
     async () => {
         const token = getCookie('accessToken');
         if (token) {
-            const data = fetchWithRefresh('https://norma.nomoreparties.space/api/auth/user',
+            const data = fetchWithRefresh(apiURL+'auth/user',
                 {
                     method: 'GET',
                     headers: {

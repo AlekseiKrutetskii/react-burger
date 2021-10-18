@@ -13,11 +13,14 @@ function ProtectedRoute({ children, ...rest }) {
     return (
         <Route
             {...rest}
-            render={() =>
+            render={({location}) =>
                 isAuth ? (children) : (
                     // Если пользователя нет в хранилище, происходит переадресация на роут /login
                     <Redirect
-                        to='/login'
+                        to={{
+                            pathname: '/login',
+                            state: {from: location}
+                        }}
                     />
                 )
 
