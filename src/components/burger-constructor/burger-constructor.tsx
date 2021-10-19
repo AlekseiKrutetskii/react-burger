@@ -8,8 +8,10 @@ import { useDrop } from 'react-dnd';
 import {constructors} from "../../services/slices/constructors";
 import ConstructorItem from "./constructor-item";
 import update from 'immutability-helper';
+import {useLocation} from 'react-router-dom'
 
 function BurgerConstructor(props) {
+    const location = useLocation();
     const dispatch = useDispatch();
     const data = useSelector((store: RootState) => store.constructors.items)
     const amount = data.reduce(function(previousValue, currentValue, index, array) {
@@ -69,7 +71,7 @@ function BurgerConstructor(props) {
                 </span>
                 {
                     isAuth ? <Button type="primary" size="large" onClick={props.handleOpenModal}>Оформить заказ</Button>
-                    :<Button type="primary" size="large" onClick={()=>{history.push('/login')}}>Оформить заказ</Button>
+                    :<Button type="primary" size="large" onClick={()=>{history.push('/login', {from: location})}}>Оформить заказ</Button>
                 }
             </div>
         </section>
