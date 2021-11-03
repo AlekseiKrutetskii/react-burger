@@ -13,7 +13,6 @@ function Modal(props) {
     return ReactDOM.createPortal(<ModalOverlay handleCloseModal={props.handleCloseModal} >
         <div onClick={(e)=>{ e.stopPropagation()}} className={styles.modal + ' pt-10'}>
             <header className={'mr-10 ml-10 text text_type_main-medium ' + styles.header}>
-                <span>{(props.header !== '')?props.header:''}</span>
                 <CloseIcon type="primary" onClick={props.handleCloseModal} />
             </header>
             <section>{props.children}</section>
@@ -24,7 +23,6 @@ function Modal(props) {
 export default Modal;
 
 Modal.propTypes = {
-    header: PropTypes.string,
     handleCloseModal: PropTypes.func,
     children: PropTypes.element
 };

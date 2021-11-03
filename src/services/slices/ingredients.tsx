@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-const api = 'https://norma.nomoreparties.space/api/ingredients';
+import {apiURL} from "../../utils/data";
 
 interface IngredientsState {
     entities: any,
@@ -14,7 +14,7 @@ const initialState: IngredientsState = {
 export const fetchIngredients = createAsyncThunk(
     'ingredients/fetchIngredients',
     async (userId, thunkAPI) => {
-        const response = await fetch(api)
+        const response = await fetch(apiURL+'ingredients')
         return response.json()
     }
 )

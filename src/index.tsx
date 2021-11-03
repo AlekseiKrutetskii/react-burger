@@ -6,8 +6,11 @@ import reportWebVitals from './reportWebVitals';
 
 import { Provider } from 'react-redux';
 import { rootReducer } from './services/reducers';
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-
+import {configureStore, getDefaultMiddleware} from '@reduxjs/toolkit';
+import {routerMiddleware} from "connected-react-router";
+import {history} from "./services/reducers";
+import {getUser} from "./services/slices/user";
+import {ConnectedRouter} from "connected-react-router";
 
 const middleware = getDefaultMiddleware({
     immutableCheck: false,
@@ -17,14 +20,19 @@ const middleware = getDefaultMiddleware({
 
 export const store = configureStore({
     reducer: rootReducer,
-    middleware,
+    middleware: [...middleware, routerMiddleware(history)],
     devTools: process.env.NODE_ENV !== 'production',
 });
+
+// @ts-ignore
+store.dispatch(getUser())
 
 ReactDOM.render(
   <React.StrictMode>
       <Provider store={store}>
-          <App />
+          <ConnectedRouter history={history}>
+              <App />
+          </ConnectedRouter>
       </Provider>
   </React.StrictMode>,
   document.getElementById('root')

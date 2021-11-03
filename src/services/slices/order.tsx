@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-
-const api = 'https://norma.nomoreparties.space/api/orders';
+import {fetchWithRefresh, getCookie} from "../../utils/utils";
+import {apiURL} from "../../utils/data";
 
 interface OrderState {
     order: any,
@@ -15,14 +15,21 @@ const initialState: OrderState = {
 export const sendOrder = createAsyncThunk(
     'order/sendOrder',
     async (ingredients:any) => {
-        const response = await fetch(api, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: ingredients
-        })
-        return response.json()
+
+        const token = getCookie('accessToken');
+        if (token) {
+            const data = fetchWithRefresh(apiURL+'orders',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: 'Bearer ' + getCookie('accessToken')
+                    },
+                    body: ingredients
+                })
+            return data
+        }
+        return Promise.reject("Нет токена");
     }
 )
 

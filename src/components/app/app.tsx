@@ -9,17 +9,23 @@ import OrderDetails from "../order-details/order-details";
 import {current} from "../../services/slices/current";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../services/reducers";
+import {Switch, Route, useLocation } from 'react-router-dom';
+import {ResetPasswordPage, ForgotPasswordPage, LoginPage, RegisterPage, ProfilePage } from '../../pages';
 
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
-import {sendOrder} from "../../services/slices/order";
+import { sendOrder } from "../../services/slices/order";
+import ProtectedRoute from "../protected-route/protected-route";
+import {history} from "../../services/reducers";
 
 function App() {
+    const location = useLocation();
     const dispatch = useDispatch();
     const[visible,setVisible] = useState(false);
     const[typeModal, setTypeModal] = useState('');
     const product = useSelector((store: RootState) => store.current.cur)
     const data = useSelector((store: RootState) => store.constructors.items)
+    const background = (history.action === 'PUSH' || history.action === 'REPLACE') ? (location.state && location.state.background) : null;
 
     const handleOpenModal = (e) => {
         if (e.currentTarget.dataset.modaltype && e.currentTarget.dataset.modaltype.toString() === "Ingredients") {
@@ -36,12 +42,16 @@ function App() {
     }
 
     const handleCloseModal = () => {
-        setVisible(false)
-        dispatch(current.actions.del())
+        if (!visible) {
+            history.goBack();console.log('presIngredientss')
+        } else {
+            setVisible(false)
+            dispatch(current.actions.del())
+        }
     }
 
     const handleKeyPress = (e) => {
-        if (visible && e.key === "Escape") {
+        if ((visible||background) && e.key === "Escape") {
              handleCloseModal()
         }
     }
@@ -54,19 +64,62 @@ function App() {
         }
     )
 
-    const modal = (typeModal === 'Ingredients' && product !== null) ? <Modal header="Детали ингредиента" handleCloseModal={handleCloseModal}>
+    //console.log(history)
+    //console.log(location)
+    /*
+    * / - главная страница, конструктор бургеров.
+    * /login - страница авторизации.
+    * /register - страница регистрации.
+    * /forgot-password - страница восстановления пароля.
+    * /reset-password - страница сброса пароля.
+    * /profile — страница с настройками профиля пользователя.
+    * /ingredients/:id — страница ингредиента.
+    * 404
+    *
+    */
+
+    const modal = (typeModal === 'Ingredients' && product !== null) ? <Modal handleCloseModal={handleCloseModal}>
         <IngredientDetails {...product} /></Modal> : <Modal handleCloseModal={handleCloseModal}><OrderDetails /></Modal>
 
     return (
         <div className={styles.app}>
             <AppHeader />
-            <DndProvider backend={HTML5Backend}>
-                <main className={styles['app-main']}>
-                    <BurgerIngredients handleOpenModal={handleOpenModal} />
-                    <BurgerConstructor handleOpenModal={handleOpenModal}/>
-                </main>
-            </DndProvider>
-            {visible && modal}
+            <Switch location={background || location}>
+                <Route path="/" exact={true}>
+                    <DndProvider backend={HTML5Backend}>
+                        <main className={styles['app-main']}>
+                            <BurgerIngredients handleOpenModal={handleOpenModal} />
+                            <BurgerConstructor handleOpenModal={handleOpenModal}/>
+                        </main>
+                    </DndProvider>
+                    {visible && modal}
+                </Route>
+                <Route path="/login">
+                    <LoginPage />
+                </Route>
+                <Route path="/register">
+                    <RegisterPage/>
+                </Route>
+                <Route path="/forgot-password">
+                    <ForgotPasswordPage/>
+                </Route>
+                <Route path="/reset-password">
+                    <ResetPasswordPage/>
+                </Route>
+                <ProtectedRoute path="/profile">
+                    <ProfilePage/>
+                </ProtectedRoute>
+                <Route path={`/ingredients/:id`}>
+                    <IngredientDetails />
+                </Route>
+                <Route>
+                    <></>
+                </Route>
+            </Switch>
+
+            {/* Show the modal when a background page is set */}
+            {background && <Route path="/ingredients/:id" children={<Modal handleCloseModal={handleCloseModal}>
+                <IngredientDetails {...product} /></Modal>} />}
         </div>
     )
 }
