@@ -3,7 +3,7 @@ import {Link, Redirect} from 'react-router-dom'
 import styles from './forgot-password.module.css'
 import {Input, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import {useSelector} from "react-redux";
-import {history} from "../services/reducers";
+import {history, RootState} from "../services/reducers";
 
 export function ForgotPasswordPage() {
     const [valueEmail, setValueEmail] = useState('')
@@ -36,7 +36,7 @@ export function ForgotPasswordPage() {
     const onSubmitHandle = async (e) => {
         e.preventDefault()
         if (!error && valueEmail !== '') {
-            localStorage.setItem('forgot', true)
+            localStorage.setItem('forgot', 'yes')
 
             await fetch('https://norma.nomoreparties.space/api/password-reset', {
                 method: 'POST',
@@ -54,8 +54,8 @@ export function ForgotPasswordPage() {
         }
     }
 
-    const isLoading = useSelector((store) => store.user.loading)
-    const isAuth = useSelector((store) => !!store.user.data)
+    const isLoading = useSelector((store: RootState) => store.user.loading)
+    const isAuth = useSelector((store: RootState) => !!store.user.data)
 
     if (isLoading === 'loading') {
         return null

@@ -7,22 +7,23 @@ import {logoutUser, setUserData} from "../services/slices/user";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchWithRefresh, getCookie} from "../utils/utils";
 import {apiURL} from "../utils/data";
+import {TPassword} from "../types";
 
 export function ProfilePage() {
-    const curName = useSelector((store) => store.user.data.name)
-    const curEMail = useSelector((store) => store.user.data.email)
-    const [valueName, setValueName] = useState(curName)
-    const [valueEmail, setValueEmail] = useState(curEMail)
-    const [valuePassword, setValuePassword] = useState('')
-    const [typePassword, setTypePassword] = useState({type:'password', icon:'ShowIcon'})
-    const inputNameRef = useRef(null)
-    const inputEmailRef = useRef(null)
-    const inputPasswordRef = useRef(null)
+    const curName = useSelector((store: any) => store.user.data.name)
+    const curEMail = useSelector((store: any) => store.user.data.email)
+    const [valueName, setValueName] = useState<string>(curName)
+    const [valueEmail, setValueEmail] = useState<string>(curEMail)
+    const [valuePassword, setValuePassword] = useState<string>('')
+    const [typePassword, setTypePassword] = useState<TPassword>({type:'password', icon:'ShowIcon'})
+    const inputNameRef = useRef<HTMLInputElement>(null)
+    const inputEmailRef = useRef<HTMLInputElement>(null)
+    const inputPasswordRef = useRef<HTMLInputElement>(null)
     const dispatch = useDispatch()
 
     const { url, path } = useRouteMatch();
 
-    const showPassword = () => {
+    const showPassword = ():void => {
         if (typePassword.type === 'text') {
             setTypePassword({type:'password', icon: 'ShowIcon'});
         } else {
@@ -30,19 +31,19 @@ export function ProfilePage() {
         }
     }
 
-    const handleOnClick = () => {
+    const handleOnClick = ():void => {
         setValueName(curName)
         setValueEmail(curEMail)
         setValuePassword('')
     }
 
-    const singOut = () => {
+    const singOut = ():void => {
         dispatch(logoutUser(JSON.stringify({
             token: localStorage.getItem("refreshToken"),
         })));
     }
 
-    const onSubmitHandle = (e) => {
+    const onSubmitHandle = (e):void => {
         e.preventDefault()
         fetchWithRefresh (apiURL+'auth/user', {
             method: 'PATCH',

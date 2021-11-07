@@ -1,15 +1,19 @@
 import React, {useEffect, useRef, useState} from 'react';
-import PropTypes from 'prop-types';
 import styles from './burger-ingredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../services/reducers";
 import {fetchIngredients} from "../../services/slices/ingredients";
 import IngredientsItem from "./ingredients-item";
+import {TEntity} from "../../types";
 
-function BurgerIngredients(props) {
+export type TBurgerIngredientsProps = {
+    handleOpenModal: (e: React.MouseEvent<HTMLElement>) => void
+}
+
+const BurgerIngredients:React.FC<TBurgerIngredientsProps> = ({handleOpenModal}) => {
     const dispatch = useDispatch();
-    const data = useSelector((store: RootState) => store.ingredients.entities)
+    const data:Array<TEntity> = useSelector((store: RootState) => store.ingredients.entities)
     const [current, setCurrent] = useState('one')
 
     const divWrap = useRef<HTMLDivElement>(null);
@@ -59,7 +63,7 @@ function BurgerIngredients(props) {
                         {data
                             .filter(item => item.type === 'bun')
                             .map(item =>
-                                <IngredientsItem key={item._id} handleOpenModal={props.handleOpenModal} item={item} />
+                                <IngredientsItem key={item._id} item={item} />
                             )
                         }
                     </div>
@@ -70,7 +74,7 @@ function BurgerIngredients(props) {
                         {data
                             .filter(item => item.type === 'main')
                             .map(item =>
-                                <IngredientsItem key={item._id} handleOpenModal={props.handleOpenModal} item={item} />
+                                <IngredientsItem key={item._id} item={item} />
                             )
                         }
                     </div>
@@ -81,7 +85,7 @@ function BurgerIngredients(props) {
                         {data
                             .filter(item => item.type === 'sauce')
                             .map(item =>
-                                <IngredientsItem key={item._id} handleOpenModal={props.handleOpenModal} item={item} />
+                                <IngredientsItem key={item._id} item={item} />
                             )
                         }
                     </div>
@@ -92,7 +96,3 @@ function BurgerIngredients(props) {
 }
 
 export default BurgerIngredients;
-
-BurgerIngredients.propTypes = {
-    handleOpenModal: PropTypes.func
-};

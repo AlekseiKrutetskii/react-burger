@@ -1,12 +1,13 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import {apiURL} from "../../utils/data";
+import {TEntity} from "../../types";
 
-interface IngredientsState {
-    entities: any,
+type TIngredientsState = {
+    entities: Array<TEntity>,
     loading: string
 }
 
-const initialState: IngredientsState = {
+const initialState: TIngredientsState = {
     entities: [],
     loading: 'idle'
 }

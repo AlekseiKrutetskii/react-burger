@@ -3,7 +3,7 @@ import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-dev
 import styles from './app-header.module.css';
 import {useRouteMatch, Link} from "react-router-dom";
 
-function AppHeader() {
+const AppHeader = () => {
     const isConstructor = !!useRouteMatch({ path: '/', exact: true});
     const isFeed = !!useRouteMatch('/feed');
     const isProfile = !!useRouteMatch('/profile');
