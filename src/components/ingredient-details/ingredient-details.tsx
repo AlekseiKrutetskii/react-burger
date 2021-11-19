@@ -1,26 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import styles from './ingredient-details.module.css'
-import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../services/reducers";
 import {fetchIngredients} from "../../services/slices/ingredients";
+import {TEntity} from "../../types";
 
+type TRouteParams = {
+    id: string;
+}
 
-function IngredientDetails(props) {
+const IngredientDetails:React.FC = () => {
     const dispatch = useDispatch()
-    const initState = {
-        name: '',
-        image_large: '',
-        calories: '',
-        proteins: '',
-        fat: '',
-        carbohydrates: '',
-    }
-    const [ing, setIng] = useState(initState)
-    const data = useSelector((store: RootState) => store.ingredients.entities)
+    const [ing, setIng] = useState<TEntity>()
+    const data:Array<TEntity> = useSelector((store: RootState) => store.ingredients.entities)
     const isLoading = useSelector((store: RootState) => store.ingredients.loading)
-    let { id } = useParams();
+    let { id } = useParams<TRouteParams>();
 
     useEffect(()=>{
         dispatch(fetchIngredients())
@@ -32,7 +27,7 @@ function IngredientDetails(props) {
         )
     }, [data, id])
 
-    if (isLoading === 'loading') {
+    if (isLoading === 'loading' || !ing) {
         return null
     }
 
@@ -59,20 +54,4 @@ function IngredientDetails(props) {
 }
 
 export default IngredientDetails;
-
-IngredientDetails.propTypes = {
-    calories: PropTypes.number,
-    carbohydrates: PropTypes.number,
-    fat: PropTypes.number,
-    image: PropTypes.string,
-    image_large: PropTypes.string,
-    image_mobile: PropTypes.string,
-    name: PropTypes.string,
-    price: PropTypes.number,
-    proteins: PropTypes.number,
-    type: PropTypes.string,
-    __v: PropTypes.number,
-    _id: PropTypes.string,
-    handleCloseModal: PropTypes.func,
-};
 

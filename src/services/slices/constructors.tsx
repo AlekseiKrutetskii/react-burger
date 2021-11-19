@@ -1,8 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
+import {TItem} from "../../types";
 
-interface ConstructorState {
-    items: any,
-    count: any
+type TCount = {
+    _id: string,
+    qty: number
+}
+
+type ConstructorState = {
+    items: Array<TItem>,
+    count: Array<TCount>
 }
 
 const initialState: ConstructorState = {

@@ -17,20 +17,23 @@ import { DndProvider } from 'react-dnd';
 import { sendOrder } from "../../services/slices/order";
 import ProtectedRoute from "../protected-route/protected-route";
 import {history} from "../../services/reducers";
+import {TLocationState} from "../../types";
 
-function App() {
-    const location = useLocation();
+export const App = () => {
+    const location = useLocation<TLocationState>();
     const dispatch = useDispatch();
-    const[visible,setVisible] = useState(false);
-    const[typeModal, setTypeModal] = useState('');
+    const[visible,setVisible] = useState<boolean>(false);
+    const[typeModal, setTypeModal] = useState<string>('');
     const product = useSelector((store: RootState) => store.current.cur)
     const data = useSelector((store: RootState) => store.constructors.items)
     const background = (history.action === 'PUSH' || history.action === 'REPLACE') ? (location.state && location.state.background) : null;
 
-    const handleOpenModal = (e) => {
-        if (e.currentTarget.dataset.modaltype && e.currentTarget.dataset.modaltype.toString() === "Ingredients") {
+    const handleOpenModal = (e?: React.MouseEvent<HTMLElement>):void => {
+        if (e !== undefined && e.currentTarget.dataset.modaltype && e.currentTarget.dataset.modaltype.toString() === "Ingredients") {
             setTypeModal("Ingredients")
-            dispatch(current.actions.add(JSON.parse(e.currentTarget.dataset.item)))
+            if (e.currentTarget.dataset.item !== undefined) {
+                dispatch(current.actions.add(JSON.parse(e.currentTarget.dataset.item)))
+            }
             setVisible(true)
         } else if (data.filter(item => item.type === "bun").length === 1) {
             var ingredients = data.map(item => item._id)

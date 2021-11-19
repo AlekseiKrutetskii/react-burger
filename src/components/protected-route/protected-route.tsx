@@ -1,8 +1,10 @@
 import { Route, Redirect } from 'react-router-dom';
 import { useSelector} from "react-redux";
 import {RootState} from "../../services/reducers";
+import React from "react";
+import {RouteProps} from 'react-router'
 
-function ProtectedRoute({ children, ...rest }) {
+const ProtectedRoute = ({ children, ...props }: RouteProps) => {
     const isLoading = useSelector((store: RootState) => store.user.loading)
     const isAuth = useSelector((store: RootState) => !!store.user.data)
 
@@ -12,7 +14,7 @@ function ProtectedRoute({ children, ...rest }) {
 
     return (
         <Route
-            {...rest}
+            {...props}
             render={({location}) =>
                 isAuth ? (children) : (
                     // Если пользователя нет в хранилище, происходит переадресация на роут /login

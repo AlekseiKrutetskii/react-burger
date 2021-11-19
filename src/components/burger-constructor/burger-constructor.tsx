@@ -1,5 +1,4 @@
 import React, {useCallback} from 'react';
-import PropTypes from 'prop-types';
 import styles from "./burger-construction.module.css";
 import {ConstructorElement, CurrencyIcon, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import {useDispatch, useSelector} from "react-redux";
@@ -10,7 +9,11 @@ import ConstructorItem from "./constructor-item";
 import update from 'immutability-helper';
 import {useLocation} from 'react-router-dom'
 
-function BurgerConstructor(props) {
+export type TBurgerConstructorProps = {
+    handleOpenModal: () => void
+}
+
+const BurgerConstructor:React.FC<TBurgerConstructorProps> = ({handleOpenModal}) => {
     const location = useLocation();
     const dispatch = useDispatch();
     const data = useSelector((store: RootState) => store.constructors.items)
@@ -22,7 +25,7 @@ function BurgerConstructor(props) {
     const [, drop] = useDrop(
         () => ({
             accept: 'items',
-            drop: (item:any) => {
+            drop: (item) => {
                 dispatch(constructors.actions.add(item))
             }
         })
@@ -70,7 +73,7 @@ function BurgerConstructor(props) {
                     {amount} <CurrencyIcon type="primary" />
                 </span>
                 {
-                    isAuth ? <Button type="primary" size="large" onClick={props.handleOpenModal}>Оформить заказ</Button>
+                    isAuth ? <Button type="primary" size="large" onClick={handleOpenModal}>Оформить заказ</Button>
                     :<Button type="primary" size="large" onClick={()=>{history.push('/login', {from: location})}}>Оформить заказ</Button>
                 }
             </div>
@@ -79,7 +82,3 @@ function BurgerConstructor(props) {
 }
 
 export default BurgerConstructor;
-
-BurgerConstructor.propTypes = {
-    handleOpenModal: PropTypes.func
-};

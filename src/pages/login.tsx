@@ -4,15 +4,21 @@ import styles from './login.module.css'
 import {Input, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import {loginUser} from "../services/slices/user";
 import {useDispatch, useSelector} from "react-redux";
+import {TPassword} from "../types";
+import {RootState} from "../services/reducers";
 
-export function LoginPage() {
-    const [valueEmail, setValueEmail] = useState('')
-    const [valuePassword, setValuePassword] = useState('')
-    const [typePassword, setTypePassword] = useState({type:'password', icon:'ShowIcon'})
-    const inputEmailRef = useRef(null)
-    const inputPasswordRef = useRef(null)
-    const location = useLocation();
-    const showPassword = () => {
+type TLocationState = {
+    from: string
+}
+
+export const LoginPage = () => {
+    const [valueEmail, setValueEmail] = useState<string>('')
+    const [valuePassword, setValuePassword] = useState<string>('')
+    const [typePassword, setTypePassword] = useState<TPassword>({type:'password', icon:'ShowIcon'})
+    const inputEmailRef = useRef<HTMLInputElement>(null)
+    const inputPasswordRef = useRef<HTMLInputElement>(null)
+    const location = useLocation<TLocationState>();
+    const showPassword = ():void => {
         if (typePassword.type === 'text') {
             setTypePassword({type:'password', icon: 'ShowIcon'});
         } else {
@@ -26,9 +32,7 @@ export function LoginPage() {
     const onSubmitHandle = (e) => {
         e.preventDefault()
         if (inputEmailRef.current !== null && inputPasswordRef.current !== null) {
-            // @ts-ignore
             let email = inputEmailRef.current.value;
-            // @ts-ignore
             let password = inputPasswordRef.current.value;
             dispatch(loginUser(JSON.stringify({
                 email: email,
@@ -37,8 +41,8 @@ export function LoginPage() {
         }
     }
 
-    const isLoading = useSelector((store) => store.user.loading)
-    const isAuth = useSelector((store) => !!store.user.data)
+    const isLoading = useSelector((store: RootState) => store.user.loading)
+    const isAuth = useSelector((store: RootState) => !!store.user.data)
 
     if (isLoading === 'loading') {
         return null
@@ -46,9 +50,7 @@ export function LoginPage() {
 
     if (isAuth) {
         return (
-            <Redirect
-                to={(typeof location.state !== undefined)?location.state.from:'/'}
-            />
+            <Redirect to={(location.state) ? location.state.from : '/'} />
         )
     }
 
@@ -65,5 +67,3 @@ export function LoginPage() {
         </div>
     )
 }
-
-

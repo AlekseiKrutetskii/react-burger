@@ -5,7 +5,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../services/reducers";
 import {constructors} from "../../services/slices/constructors";
 
-function OrderDetails() {
+
+const OrderDetails:React.FC = () => {
     const dispatch = useDispatch();
     const order = useSelector((store: RootState) => store.order.order)
     var number = '----';

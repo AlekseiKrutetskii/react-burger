@@ -1,14 +1,21 @@
 import React, {useRef} from 'react';
-import PropTypes from "prop-types";
 import {ConstructorElement, DragIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import {constructors} from "../../services/slices/constructors";
 import {useDispatch} from "react-redux";
 import {useDrag, useDrop} from 'react-dnd';
+import {TItem} from "../../types";
 
-function ConstructorItem(props) {
+type TConstructorItemProps = {
+    item: TItem,
+    index: number,
+    id: string,
+    moveConstructorItem: (dragIndex:number, hoverIndex:number) => void
+}
+
+const ConstructorItem:React.FC<TConstructorItemProps> = ({item, index, id, moveConstructorItem}) => {
     const dispatch = useDispatch();
 
-    const delFromConstructor = (item) => {
+    const delFromConstructor = (item:TItem):void => {
         dispatch(constructors.actions.del({item}))
     }
 
@@ -20,12 +27,12 @@ function ConstructorItem(props) {
                 handlerId: monitor.getHandlerId(),
             };
         },
-        hover(item:any, monitor) {
+        hover(item:TConstructorItemProps, monitor) {
             if (!ref.current) {
                 return;
             }
             const dragIndex = item.index;
-            const hoverIndex = props.index;
+            const hoverIndex = index;
             // Don't replace items with themselves
             if (dragIndex === hoverIndex) {
                 return;
@@ -50,7 +57,7 @@ function ConstructorItem(props) {
                 return;
             }
             // Time to actually perform the action
-            props.moveConstructorItem(dragIndex, hoverIndex);
+            moveConstructorItem(dragIndex, hoverIndex);
             // Note: we're mutating the monitor item here!
             // Generally it's better to avoid mutations,
             // but it's good here for the sake of performance
@@ -61,7 +68,7 @@ function ConstructorItem(props) {
     const [{ isDragging }, drag] = useDrag({
         type: 'citem',
         item: () => {
-            return { id: props.id, index: props.index };
+            return { id, index };
         },
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
@@ -72,15 +79,8 @@ function ConstructorItem(props) {
 
 
     return (
-        <li ref={ref} style={{opacity}} data-handler-id={handlerId} key={props.item.customId} className="mb-4" data-modaltype='Ingredients' data-item={JSON.stringify(props.item)}><DragIcon type="primary" /><ConstructorElement text={props.item.name} price={props.item.price} thumbnail={props.item.image} handleClose={()=>delFromConstructor(props.item)} /></li>
+        <li ref={ref} style={{opacity}} data-handler-id={handlerId} key={item.customId} className="mb-4" data-modaltype='Ingredients' data-item={JSON.stringify(item)}><DragIcon type="primary" /><ConstructorElement text={item.name} price={item.price} thumbnail={item.image} handleClose={()=>delFromConstructor(item)} /></li>
     )
 }
 
 export default ConstructorItem;
-
-ConstructorItem.propTypes = {
-    item: PropTypes.any,
-    index: PropTypes.number,
-    id: PropTypes.string,
-    moveConstructorItem: PropTypes.func
-};

@@ -4,15 +4,17 @@ import styles from './register.module.css'
 import {Input, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import {useDispatch, useSelector} from "react-redux";
 import {registerUser} from "../services/slices/user";
+import {TPassword} from "../types";
+import {RootState} from "../services/reducers";
 
 export function RegisterPage() {
-    const [valueName, setValueName] = useState('')
-    const [valueEmail, setValueEmail] = useState('')
-    const [valuePassword, setValuePassword] = useState('')
-    const [typePassword, setTypePassword] = useState({type:'password', icon:'ShowIcon'})
-    const inputNameRef = useRef(null)
-    const inputEmailRef = useRef(null)
-    const inputPasswordRef = useRef(null)
+    const [valueName, setValueName] = useState<string>('')
+    const [valueEmail, setValueEmail] = useState<string>('')
+    const [valuePassword, setValuePassword] = useState<string>('')
+    const [typePassword, setTypePassword] = useState<TPassword>({type:'password', icon:'ShowIcon'})
+    const inputNameRef = useRef<HTMLInputElement>(null)
+    const inputEmailRef = useRef<HTMLInputElement>(null)
+    const inputPasswordRef = useRef<HTMLInputElement>(null)
 
     const dispatch = useDispatch();
     const showPassword = () => {
@@ -23,17 +25,17 @@ export function RegisterPage() {
         }
     }
 
-    const onSubmitHandle = (e) => {
+    const onSubmitHandle = (e):void => {
         e.preventDefault()
         dispatch(registerUser(JSON.stringify({
-            email: inputEmailRef.current.value,
-            password: inputPasswordRef.current.value,
-            name: inputNameRef.current.value,
+            email: (inputEmailRef.current !== null)?inputEmailRef.current.value:'',
+            password: (inputPasswordRef.current !== null)?inputPasswordRef.current.value:'',
+            name: (inputNameRef.current !== null)?inputNameRef.current.value:'',
         })))
     }
 
-    const isLoading = useSelector((store) => store.user.loading)
-    const isAuth = useSelector((store) => !!store.user.data)
+    const isLoading = useSelector((store: RootState) => store.user.loading)
+    const isAuth = useSelector((store: RootState) => !!store.user.data)
 
     if (isLoading === 'loading') {
         return null
