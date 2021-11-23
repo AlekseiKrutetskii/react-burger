@@ -4,7 +4,7 @@ import {CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import {useLocation, Link} from "react-router-dom";
 import {OrderStatus, TOrder} from "../../types/orders";
 import {TEntity, TLocationState} from "../../types";
-import {useSelector} from "react-redux";
+import {useSelector} from '../../services/hooks';
 import {RootState} from "../../services/reducers";
 import moment from 'moment'
 import 'moment/locale/ru';

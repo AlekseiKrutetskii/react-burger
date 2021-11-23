@@ -160,5 +160,6 @@ export const user = createSlice({
 })
 
 const { actions, reducer } = user;
+export const userAction = user.actions;
 export const { setUserData } = actions;
 export default reducer;

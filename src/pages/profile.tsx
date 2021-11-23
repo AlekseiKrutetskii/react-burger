@@ -1,20 +1,20 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import styles from './profile.module.css'
 import {Input, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import {NavLink, useRouteMatch, Switch, Route, Link} from "react-router-dom";
 import ProtectedRoute from "../components/protected-route/protected-route";
 import {logoutUser, setUserData} from "../services/slices/user";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from '../services/hooks';
 import {fetchWithRefresh, getCookie} from "../utils/utils";
 import {apiURL} from "../utils/data";
 import {TPassword} from "../types";
 import {OrdersPage} from "./orders";
+import {RootState} from "../services/reducers";
 
 export function ProfilePage() {
-    const curName = useSelector((store: any) => store.user.data.name)
-    const curEMail = useSelector((store: any) => store.user.data.email)
-    const [valueName, setValueName] = useState<string>(curName)
-    const [valueEmail, setValueEmail] = useState<string>(curEMail)
+    const curUser = useSelector((store: RootState) => store.user.data);
+    const [valueName, setValueName] = useState<string>('')
+    const [valueEmail, setValueEmail] = useState<string>('')
     const [valuePassword, setValuePassword] = useState<string>('')
     const [typePassword, setTypePassword] = useState<TPassword>({type:'password', icon:'ShowIcon'})
     const inputNameRef = useRef<HTMLInputElement>(null)
@@ -23,6 +23,11 @@ export function ProfilePage() {
     const dispatch = useDispatch()
 
     const { url, path } = useRouteMatch();
+
+    useEffect(()=>{
+        setValueName((curUser)?curUser.name:'')
+        setValueEmail((curUser)?curUser.email:'')
+    }, [curUser])
 
     const showPassword = ():void => {
         if (typePassword.type === 'text') {
@@ -33,8 +38,8 @@ export function ProfilePage() {
     }
 
     const handleOnClick = ():void => {
-        setValueName(curName)
-        setValueEmail(curEMail)
+        setValueName((curUser)?curUser.name:'')
+        setValueEmail((curUser)?curUser.email:'')
         setValuePassword('')
     }
 

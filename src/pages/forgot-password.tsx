@@ -2,8 +2,9 @@ import React, {useState, useRef} from 'react';
 import {Link, Redirect} from 'react-router-dom'
 import styles from './forgot-password.module.css'
 import {Input, Button} from "@ya.praktikum/react-developer-burger-ui-components";
-import {useSelector} from "react-redux";
-import {history, RootState} from "../services/reducers";
+import {useSelector} from '../services/hooks';
+import {RootState} from "../services/reducers";
+import {forgotPassword} from "../utils/utils";
 
 export function ForgotPasswordPage() {
     const [valueEmail, setValueEmail] = useState('')
@@ -33,27 +34,6 @@ export function ForgotPasswordPage() {
         }
     }
 
-    const onSubmitHandle = async (e) => {
-        e.preventDefault()
-        if (!error && valueEmail !== '') {
-            localStorage.setItem('forgot', 'yes')
-
-            await fetch('https://norma.nomoreparties.space/api/password-reset', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({email: valueEmail})
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data.success?'ok':'error')
-                history.push('/reset-password')
-            })
-                .catch(() => console.log('some error'))
-        }
-    }
-
     const isLoading = useSelector((store: RootState) => store.user.loading)
     const isAuth = useSelector((store: RootState) => !!store.user.data)
 
@@ -72,7 +52,7 @@ export function ForgotPasswordPage() {
     return (
         <div className={styles.wrap + " pt-20"}>
             <p className="text text_type_main-medium pb-10">Восстановление пароля</p>
-            <form onSubmit={onSubmitHandle} className={styles.wrap}>
+            <form onSubmit={e => forgotPassword(e,error,valueEmail)} className={styles.wrap}>
                 <Input type={'text'} placeholder={'Укажите e-mail'} error={error} errorText={errorText} onChange={handleOnChange} onBlur={handleOnBlur} value={valueEmail} name={'email'} ref={inputEmailRef} size={'default'} /><br />
                 <Button type="primary" size="medium">Восстановить</Button>
             </form>

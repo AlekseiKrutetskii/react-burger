@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {CheckMarkIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from './order-details.module.css'
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from '../../services/hooks';
 import {RootState} from "../../services/reducers";
 import {constructors} from "../../services/slices/constructors";
 

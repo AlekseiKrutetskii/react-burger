@@ -3,7 +3,7 @@ import { Link, Redirect, useLocation } from 'react-router-dom'
 import styles from './login.module.css'
 import {Input, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import {loginUser} from "../services/slices/user";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from '../services/hooks';
 import {TPassword} from "../types";
 import {RootState} from "../services/reducers";
 

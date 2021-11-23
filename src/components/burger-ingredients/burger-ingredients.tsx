@@ -1,9 +1,8 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import styles from './burger-ingredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from '../../services/hooks';
 import {RootState} from "../../services/reducers";
-import {fetchIngredients} from "../../services/slices/ingredients";
 import IngredientsItem from "./ingredients-item";
 import {TEntity} from "../../types";
 
@@ -12,7 +11,6 @@ export type TBurgerIngredientsProps = {
 }
 
 const BurgerIngredients:React.FC<TBurgerIngredientsProps> = ({handleOpenModal}) => {
-    const dispatch = useDispatch();
     const data:Array<TEntity> = useSelector((store: RootState) => store.ingredients.entities)
     const [current, setCurrent] = useState('one')
 
@@ -21,11 +19,6 @@ const BurgerIngredients:React.FC<TBurgerIngredientsProps> = ({handleOpenModal}) 
     const divMain = useRef<HTMLDivElement>(null);
     const divSouce = useRef<HTMLDivElement>(null);
     const offsetCorrect = (divBun.current != null ) ? divBun.current.offsetTop : 0;
-
-    useEffect(() => {
-        dispatch(fetchIngredients())
-    },
-    [dispatch])
 
     const onScroll = () => {
         const scrollTopDivWrap = (divWrap.current != null ) ? divWrap.current.scrollTop : 0;

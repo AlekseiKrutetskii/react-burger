@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import styles from "./burger-construction.module.css";
 import {ConstructorElement, CurrencyIcon, Button} from "@ya.praktikum/react-developer-burger-ui-components";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from '../../services/hooks';
 import {history, RootState} from "../../services/reducers";
 import { useDrop } from 'react-dnd';
 import {constructors} from "../../services/slices/constructors";

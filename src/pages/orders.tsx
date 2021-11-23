@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {useDispatch} from "react-redux";
+import {useDispatch} from '../services/hooks';
 import OrdersList from "../components/orders-list/orders-list";
 import {connect, disconnect} from "../services/actions";
 import {getCookie} from "../utils/utils";

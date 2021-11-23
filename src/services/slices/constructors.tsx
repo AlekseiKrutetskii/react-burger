@@ -70,3 +70,4 @@ export const constructors = createSlice({
 });
 
 export const { add, del, update, clear } = constructors.actions;
+export const constructorsAction = constructors.actions;

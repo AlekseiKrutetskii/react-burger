@@ -1,5 +1,5 @@
 
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from '../../services/hooks';
 import {RootState} from "../../services/reducers";
 import {useParams} from "react-router-dom";
 import {OrderStatus, TOrder} from "../../types/orders";
@@ -10,7 +10,6 @@ import 'moment/locale/ru';
 import {CurrencyIcon} from "@ya.praktikum/react-developer-burger-ui-components";
 import {TEntity} from "../../types";
 import {connect, disconnect} from "../../services/actions";
-import {fetchIngredients} from "../../services/slices/ingredients";
 
 type TRouteParams = {
     id: string;
@@ -28,7 +27,6 @@ export const Order:React.FC = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fetchIngredients())
         dispatch(connect("wss://norma.nomoreparties.space/orders/all"))
         return () => {
             dispatch(disconnect())

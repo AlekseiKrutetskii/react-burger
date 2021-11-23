@@ -1,19 +1,12 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import styles from './orders-list.module.css';
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from '../../services/hooks';
 import {RootState} from "../../services/reducers";
-import {fetchIngredients} from "../../services/slices/ingredients";
 import OrdersListItem from "./orders-list-item";
 import {TOrder} from "../../types/orders";
 
 const OrdersList:React.FC = () => {
-    const dispatch = useDispatch();
     const orders:Array<TOrder>|null = useSelector((store: RootState) => store.orders.orders);
-
-    useEffect(() => {
-        dispatch(fetchIngredients())
-    },
-    [dispatch])
 
     return (
         <section className={`${styles.orders}`}>

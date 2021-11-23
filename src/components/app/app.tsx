@@ -7,7 +7,7 @@ import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import OrderDetails from "../order-details/order-details";
 import {current} from "../../services/slices/current";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from '../../services/hooks';
 import {RootState} from "../../services/reducers";
 import {Switch, Route, useLocation } from 'react-router-dom';
 import {ResetPasswordPage, ForgotPasswordPage, LoginPage, RegisterPage, ProfilePage } from '../../pages';
@@ -20,6 +20,7 @@ import {history} from "../../services/reducers";
 import {TLocationState} from "../../types";
 import {FeedPage} from "../../pages/feed";
 import {Order} from "../order/order";
+import {fetchIngredients} from "../../services/slices/ingredients";
 
 export const App = () => {
     const location = useLocation<TLocationState>();
@@ -60,6 +61,10 @@ export const App = () => {
              handleCloseModal()
         }
     }
+
+    useEffect(()=>{
+        dispatch(fetchIngredients())
+    }, [dispatch])
 
     useEffect(() => {
             document.addEventListener("keydown", handleKeyPress);

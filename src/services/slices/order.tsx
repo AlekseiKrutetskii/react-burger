@@ -79,3 +79,5 @@ export const order = createSlice({
         })
     },
 })
+
+export const orderAction = order.actions;
