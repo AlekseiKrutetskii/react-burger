@@ -1,6 +1,6 @@
 import {apiURL} from "./data";
 
-export const checkReponse = (res) => {
+export const checkReponse = (res: Response) => {
     return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 };
 
@@ -13,15 +13,15 @@ export const refreshToken = () => {
         body: JSON.stringify({
             token: localStorage.getItem("refreshToken"),
         }),
-    }).then(checkReponse);
+    }).then((res) => checkReponse(res));
 };
 
 export const fetchWithRefresh = async (url, options) => {
     try {
         const res = await fetch(url, options);
         return await checkReponse(res);
-    } catch (err:any) {
-        if (err.message === "jwt expired") {
+    } catch (err) {
+        if (err instanceof Error && err.message === "jwt expired") {
             const refreshData = await refreshToken(); //обновляем токен
             localStorage.setItem("refreshToken", refreshData.refreshToken);
             setCookie("accessToken", refreshData.accessToken);

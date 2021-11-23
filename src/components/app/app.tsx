@@ -18,19 +18,21 @@ import { sendOrder } from "../../services/slices/order";
 import ProtectedRoute from "../protected-route/protected-route";
 import {history} from "../../services/reducers";
 import {TLocationState} from "../../types";
+import {FeedPage} from "../../pages/feed";
+import {Order} from "../order/order";
 
 export const App = () => {
     const location = useLocation<TLocationState>();
     const dispatch = useDispatch();
     const[visible,setVisible] = useState<boolean>(false);
-    const[typeModal, setTypeModal] = useState<string>('');
-    const product = useSelector((store: RootState) => store.current.cur)
+    //const[typeModal, setTypeModal] = useState<string>('');
+    //const product = useSelector((store: RootState) => store.current.cur)
     const data = useSelector((store: RootState) => store.constructors.items)
     const background = (history.action === 'PUSH' || history.action === 'REPLACE') ? (location.state && location.state.background) : null;
 
     const handleOpenModal = (e?: React.MouseEvent<HTMLElement>):void => {
         if (e !== undefined && e.currentTarget.dataset.modaltype && e.currentTarget.dataset.modaltype.toString() === "Ingredients") {
-            setTypeModal("Ingredients")
+            //setTypeModal("Ingredients")
             if (e.currentTarget.dataset.item !== undefined) {
                 dispatch(current.actions.add(JSON.parse(e.currentTarget.dataset.item)))
             }
@@ -38,7 +40,7 @@ export const App = () => {
         } else if (data.filter(item => item.type === "bun").length === 1) {
             var ingredients = data.map(item => item._id)
             dispatch(sendOrder(JSON.stringify({ingredients})))
-            setTypeModal("Order")
+            //setTypeModal("Order")
             setVisible(true)
         }
 
@@ -81,8 +83,9 @@ export const App = () => {
     *
     */
 
-    const modal = (typeModal === 'Ingredients' && product !== null) ? <Modal handleCloseModal={handleCloseModal}>
-        <IngredientDetails {...product} /></Modal> : <Modal handleCloseModal={handleCloseModal}><OrderDetails /></Modal>
+    const modal = <Modal handleCloseModal={handleCloseModal}><OrderDetails /></Modal>
+    // const modal = (typeModal === 'Ingredients' && product !== null) ? <Modal handleCloseModal={handleCloseModal}>
+    //     <IngredientDetails {...product} /></Modal> : <Modal handleCloseModal={handleCloseModal}><OrderDetails /></Modal>
 
     return (
         <div className={styles.app}>
@@ -96,6 +99,12 @@ export const App = () => {
                         </main>
                     </DndProvider>
                     {visible && modal}
+                </Route>
+                <ProtectedRoute path={`/profile/orders/:id`}>
+                    <Order />
+                </ProtectedRoute>
+                <Route path={`/feed/:id`}>
+                    <Order />
                 </Route>
                 <Route path="/login">
                     <LoginPage />
@@ -115,6 +124,9 @@ export const App = () => {
                 <Route path={`/ingredients/:id`}>
                     <IngredientDetails />
                 </Route>
+                <Route path={`/feed`} exact={true}>
+                    <FeedPage/>
+                </Route>
                 <Route>
                     <></>
                 </Route>
@@ -122,7 +134,11 @@ export const App = () => {
 
             {/* Show the modal when a background page is set */}
             {background && <Route path="/ingredients/:id" children={<Modal handleCloseModal={handleCloseModal}>
-                <IngredientDetails {...product} /></Modal>} />}
+                <IngredientDetails /></Modal>} />}
+            {background && <Route path="/feed/:id" children={<Modal handleCloseModal={handleCloseModal}>
+                <Order /></Modal>} />}
+            {background && <ProtectedRoute path="/profile/orders/:id" children={<Modal handleCloseModal={handleCloseModal}>
+                <Order /></Modal>} />}
         </div>
     )
 }

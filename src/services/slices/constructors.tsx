@@ -1,9 +1,13 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {TItem} from "../../types";
 
 type TCount = {
     _id: string,
     qty: number
+}
+
+type TLoadItem = {
+    item: TItem
 }
 
 type ConstructorState = {
@@ -20,7 +24,7 @@ export const constructors = createSlice({
     name: 'constructors',
     initialState,
     reducers: {
-        add: (state, action) => {
+        add: (state, action:PayloadAction<TItem>) => {
             var customId = "id_"+Math.random();
             var idis = state.items.map(item => item._id)
 
@@ -44,8 +48,7 @@ export const constructors = createSlice({
                 state.items.push({...action.payload, customId})
             }
         },
-        del: (state, action) => {
-
+        del: (state, action:PayloadAction<TLoadItem>) => {
             state.count = state.count.map((item) => {
                 if (item._id === action.payload.item._id) {
                     state.items = state.items.filter(item => item.customId !== action.payload.item.customId)
@@ -55,7 +58,7 @@ export const constructors = createSlice({
                 }
             })
         },
-        update: (state, action) => {
+        update: (state, action:PayloadAction<Array<TItem>>) => {
             state.items = action.payload
         },
         clear: (state) => {

@@ -8,6 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {fetchWithRefresh, getCookie} from "../utils/utils";
 import {apiURL} from "../utils/data";
 import {TPassword} from "../types";
+import {OrdersPage} from "./orders";
 
 export function ProfilePage() {
     const curName = useSelector((store: any) => store.user.data.name)
@@ -45,7 +46,7 @@ export function ProfilePage() {
 
     const onSubmitHandle = (e):void => {
         e.preventDefault()
-        fetchWithRefresh (apiURL+'auth/user', {
+        fetchWithRefresh(apiURL+'auth/user', {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,11 +54,10 @@ export function ProfilePage() {
             },
             body: JSON.stringify({name: valueName, email: valueEmail, password: valuePassword})
         })
-            .then(data => {
-                console.log(data)
-                setUserData(data.user)
-            })
-            .catch(() => console.log('some error'))
+        .then(data => {
+            setUserData(data.user)
+        })
+        .catch(() => console.log('some error'))
     }
 
     return (
@@ -66,30 +66,31 @@ export function ProfilePage() {
 
                     <ul className={styles.nav}>
                         <li className="mb-5"><NavLink className={styles.link + " text text_type_main-medium"} exact activeClassName={styles.active} to={{ pathname: url }}>Профиль</NavLink></li>
-                        <li className="mb-5"><NavLink className={styles.link + " text text_type_main-medium"} activeClassName={styles.active} to={{ pathname: `${url}/history/` }}>История заказов</NavLink></li>
+                        <li className="mb-5"><NavLink className={styles.link + " text text_type_main-medium"} activeClassName={styles.active} to={{ pathname: `${url}/orders/` }}>История заказов</NavLink></li>
                         <li><Link className={styles.link + " text text_type_main-medium"} onClick={singOut} to="/login">Выход</Link></li>
                     </ul>
                     <p className="text text_type_main-default text_color_inactive mt-20">
                         В этом разделе вы можете изменить свои персональные данные
                     </p>
             </div>
-            <Switch>
-                <ProtectedRoute path={`${path}/history/`} exact={true}>
-                    <></>
-                </ProtectedRoute>
-                <Route>
-                    <form onSubmit={onSubmitHandle} className={styles.form + " pb-20"}>
-                        <Input type={'text'} placeholder={'Имя'} onChange={e => setValueName(e.target.value)} value={valueName} name={'name'} ref={inputNameRef} size={'default'} /><br />
-                        <Input type={'text'} placeholder={'E-mail'} onChange={e => setValueEmail(e.target.value)} value={valueEmail} name={'email'} ref={inputEmailRef} size={'default'} /><br />
-                        <Input icon={typePassword.icon} type={typePassword.type} placeholder={'Пароль'} onChange={e => setValuePassword(e.target.value)} onIconClick={showPassword} value={valuePassword} name={'password'} ref={inputPasswordRef} size={'default'} /><br />
-                        <p className="text text_type_main-default">
-                            <span className={styles.button + " mr-10"} onClick={handleOnClick}>Отмена</span>
-                            <Button type="primary" size="medium">Сохранить</Button>
-                        </p>
-                    </form>
-                </Route>
-            </Switch>
-
+            <div className={styles.page}>
+                <Switch>
+                    <ProtectedRoute path={`${path}/orders`} exact={true}>
+                        <OrdersPage />
+                    </ProtectedRoute>
+                    <Route path={`${path}`} exact={true}>
+                        <form onSubmit={onSubmitHandle} className={styles.form + " pb-20"}>
+                            <Input type={'text'} placeholder={'Имя'} onChange={e => setValueName(e.target.value)} value={valueName} name={'name'} ref={inputNameRef} size={'default'} /><br />
+                            <Input type={'text'} placeholder={'E-mail'} onChange={e => setValueEmail(e.target.value)} value={valueEmail} name={'email'} ref={inputEmailRef} size={'default'} /><br />
+                            <Input icon={typePassword.icon} type={typePassword.type} placeholder={'Пароль'} onChange={e => setValuePassword(e.target.value)} onIconClick={showPassword} value={valuePassword} name={'password'} ref={inputPasswordRef} size={'default'} /><br />
+                            <p className="text text_type_main-default">
+                                <span className={styles.button + " mr-10"} onClick={handleOnClick}>Отмена</span>
+                                <Button type="primary" size="medium">Сохранить</Button>
+                            </p>
+                        </form>
+                    </Route>
+                </Switch>
+            </div>
         </div>
     )
 }

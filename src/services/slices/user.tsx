@@ -18,6 +18,12 @@ const initialState: UserState = {
     loading: 'idle'
 }
 
+type TUserPayload = {
+    user: AuthUser,
+    accessToken?: string,
+    success: boolean
+}
+
 export const sliceName = "user";
 
 export const registerUser = createAsyncThunk(
@@ -106,7 +112,7 @@ export const user = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(registerUser.fulfilled, (state, action) => {
+        builder.addCase(registerUser.fulfilled, (state, action:PayloadAction<TUserPayload>) => {
             console.log(action.payload);
             state.data = action.payload.user
             if (action.payload.accessToken !== undefined) {
@@ -114,7 +120,7 @@ export const user = createSlice({
                 setCookie('accessToken', action.payload.accessToken.split('Bearer ')[1]);
             }
         });
-        builder.addCase(loginUser.fulfilled, (state, action) => {
+        builder.addCase(loginUser.fulfilled, (state, action:PayloadAction<TUserPayload>) => {
             console.log(action.payload);
             state.data = action.payload.user
             if (action.payload.accessToken !== undefined) {
@@ -125,18 +131,19 @@ export const user = createSlice({
         builder.addCase(getUser.pending, (state) => {
             state.loading = 'loading'
         });
+
         builder.addCase(getUser.fulfilled, (state, action) => {
-            console.log(action.payload);
-            state.data = action.payload.user
-            state.loading = 'idle'
+            state.data = action.payload.user;
+            state.loading = 'idle';
         });
+
         builder.addCase(getUser.rejected, (state) => {
             state.loading = 'idle'
         });
-        builder.addCase(logoutUser.pending, (state, action) => {
+        builder.addCase(logoutUser.pending, (state) => {
             state.loading = 'loading'
         });
-        builder.addCase(logoutUser.fulfilled, (state, action) => {
+        builder.addCase(logoutUser.fulfilled, (state, action:PayloadAction<TUserPayload>) => {
             console.log(action.payload)
             if (action.payload.success) {
                 localStorage.removeItem("refreshToken");

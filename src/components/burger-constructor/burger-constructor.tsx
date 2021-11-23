@@ -8,6 +8,7 @@ import {constructors} from "../../services/slices/constructors";
 import ConstructorItem from "./constructor-item";
 import update from 'immutability-helper';
 import {useLocation} from 'react-router-dom'
+import {TItem} from "../../types";
 
 export type TBurgerConstructorProps = {
     handleOpenModal: () => void
@@ -25,7 +26,7 @@ const BurgerConstructor:React.FC<TBurgerConstructorProps> = ({handleOpenModal}) 
     const [, drop] = useDrop(
         () => ({
             accept: 'items',
-            drop: (item) => {
+            drop: (item:TItem) => {
                 dispatch(constructors.actions.add(item))
             }
         })
