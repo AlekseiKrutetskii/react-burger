@@ -5,24 +5,17 @@ import App from './components/app/app';
 import reportWebVitals from './reportWebVitals';
 
 import { Provider } from 'react-redux';
-import { rootReducer } from './services/reducers';
-import {configureStore, getDefaultMiddleware} from '@reduxjs/toolkit';
-import {routerMiddleware} from "connected-react-router";
+import {store} from "./services/reducers";
 import {history} from "./services/reducers";
 import {getUser} from "./services/slices/user";
 import {ConnectedRouter} from "connected-react-router";
 
-const middleware = getDefaultMiddleware({
-    immutableCheck: false,
-    serializableCheck: false,
-    thunk: true,
-});
+// const middleware = getDefaultMiddleware({
+//     immutableCheck: false,
+//     serializableCheck: false,
+//     thunk: true,
+// });
 
-export const store = configureStore({
-    reducer: rootReducer,
-    middleware: [...middleware, routerMiddleware(history)],
-    devTools: process.env.NODE_ENV !== 'production',
-});
 
 // @ts-ignore
 store.dispatch(getUser())

@@ -2,7 +2,7 @@ import React, {useState, useRef} from 'react';
 import {Link, Redirect} from 'react-router-dom'
 import styles from './register.module.css'
 import {Input, Button} from "@ya.praktikum/react-developer-burger-ui-components";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from '../services/hooks';
 import {registerUser} from "../services/slices/user";
 import {TPassword} from "../types";
 import {RootState} from "../services/reducers";

@@ -1,13 +1,12 @@
 import React, {useEffect} from 'react';
 import {CheckMarkIcon} from "@ya.praktikum/react-developer-burger-ui-components";
-import styles from './order-details.module.css'
+import styles from './orders-info.module.css'
 import {useDispatch, useSelector} from '../../services/hooks';
 import {RootState} from "../../services/reducers";
 import {constructors} from "../../services/slices/constructors";
 
 
-
-const OrderDetails:React.FC = () => {
+const OrdersInfo:React.FC = () => {
     const dispatch = useDispatch();
     const order = useSelector((store: RootState) => store.order.order)
     var number = '----';
@@ -16,7 +15,7 @@ const OrderDetails:React.FC = () => {
     }
     useEffect(() => {
         return () => {
-            dispatch(constructors.actions.clear());
+            dispatch(constructors.actions.clear())
         }
     }, [dispatch])
 
@@ -31,4 +30,4 @@ const OrderDetails:React.FC = () => {
     )
 }
 
-export default OrderDetails;
+export default OrdersInfo;

@@ -1,19 +1,20 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import styles from './profile.module.css'
 import {Input, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import {NavLink, useRouteMatch, Switch, Route, Link} from "react-router-dom";
 import ProtectedRoute from "../components/protected-route/protected-route";
 import {logoutUser, setUserData} from "../services/slices/user";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from '../services/hooks';
 import {fetchWithRefresh, getCookie} from "../utils/utils";
 import {apiURL} from "../utils/data";
 import {TPassword} from "../types";
+import {OrdersPage} from "./orders";
+import {RootState} from "../services/reducers";
 
 export function ProfilePage() {
-    const curName = useSelector((store: any) => store.user.data.name)
-    const curEMail = useSelector((store: any) => store.user.data.email)
-    const [valueName, setValueName] = useState<string>(curName)
-    const [valueEmail, setValueEmail] = useState<string>(curEMail)
+    const curUser = useSelector((store: RootState) => store.user.data);
+    const [valueName, setValueName] = useState<string>('')
+    const [valueEmail, setValueEmail] = useState<string>('')
     const [valuePassword, setValuePassword] = useState<string>('')
     const [typePassword, setTypePassword] = useState<TPassword>({type:'password', icon:'ShowIcon'})
     const inputNameRef = useRef<HTMLInputElement>(null)
@@ -22,6 +23,11 @@ export function ProfilePage() {
     const dispatch = useDispatch()
 
     const { url, path } = useRouteMatch();
+
+    useEffect(()=>{
+        setValueName((curUser)?curUser.name:'')
+        setValueEmail((curUser)?curUser.email:'')
+    }, [curUser])
 
     const showPassword = ():void => {
         if (typePassword.type === 'text') {
@@ -32,8 +38,8 @@ export function ProfilePage() {
     }
 
     const handleOnClick = ():void => {
-        setValueName(curName)
-        setValueEmail(curEMail)
+        setValueName((curUser)?curUser.name:'')
+        setValueEmail((curUser)?curUser.email:'')
         setValuePassword('')
     }
 
@@ -45,7 +51,7 @@ export function ProfilePage() {
 
     const onSubmitHandle = (e):void => {
         e.preventDefault()
-        fetchWithRefresh (apiURL+'auth/user', {
+        fetchWithRefresh(apiURL+'auth/user', {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,11 +59,10 @@ export function ProfilePage() {
             },
             body: JSON.stringify({name: valueName, email: valueEmail, password: valuePassword})
         })
-            .then(data => {
-                console.log(data)
-                setUserData(data.user)
-            })
-            .catch(() => console.log('some error'))
+        .then(data => {
+            setUserData(data.user)
+        })
+        .catch(() => console.log('some error'))
     }
 
     return (
@@ -66,30 +71,31 @@ export function ProfilePage() {
 
                     <ul className={styles.nav}>
                         <li className="mb-5"><NavLink className={styles.link + " text text_type_main-medium"} exact activeClassName={styles.active} to={{ pathname: url }}>Профиль</NavLink></li>
-                        <li className="mb-5"><NavLink className={styles.link + " text text_type_main-medium"} activeClassName={styles.active} to={{ pathname: `${url}/history/` }}>История заказов</NavLink></li>
+                        <li className="mb-5"><NavLink className={styles.link + " text text_type_main-medium"} activeClassName={styles.active} to={{ pathname: `${url}/orders/` }}>История заказов</NavLink></li>
                         <li><Link className={styles.link + " text text_type_main-medium"} onClick={singOut} to="/login">Выход</Link></li>
                     </ul>
                     <p className="text text_type_main-default text_color_inactive mt-20">
                         В этом разделе вы можете изменить свои персональные данные
                     </p>
             </div>
-            <Switch>
-                <ProtectedRoute path={`${path}/history/`} exact={true}>
-                    <></>
-                </ProtectedRoute>
-                <Route>
-                    <form onSubmit={onSubmitHandle} className={styles.form + " pb-20"}>
-                        <Input type={'text'} placeholder={'Имя'} onChange={e => setValueName(e.target.value)} value={valueName} name={'name'} ref={inputNameRef} size={'default'} /><br />
-                        <Input type={'text'} placeholder={'E-mail'} onChange={e => setValueEmail(e.target.value)} value={valueEmail} name={'email'} ref={inputEmailRef} size={'default'} /><br />
-                        <Input icon={typePassword.icon} type={typePassword.type} placeholder={'Пароль'} onChange={e => setValuePassword(e.target.value)} onIconClick={showPassword} value={valuePassword} name={'password'} ref={inputPasswordRef} size={'default'} /><br />
-                        <p className="text text_type_main-default">
-                            <span className={styles.button + " mr-10"} onClick={handleOnClick}>Отмена</span>
-                            <Button type="primary" size="medium">Сохранить</Button>
-                        </p>
-                    </form>
-                </Route>
-            </Switch>
-
+            <div className={styles.page}>
+                <Switch>
+                    <ProtectedRoute path={`${path}/orders`} exact={true}>
+                        <OrdersPage />
+                    </ProtectedRoute>
+                    <Route path={`${path}`} exact={true}>
+                        <form onSubmit={onSubmitHandle} className={styles.form + " pb-20"}>
+                            <Input type={'text'} placeholder={'Имя'} onChange={e => setValueName(e.target.value)} value={valueName} name={'name'} ref={inputNameRef} size={'default'} /><br />
+                            <Input type={'text'} placeholder={'E-mail'} onChange={e => setValueEmail(e.target.value)} value={valueEmail} name={'email'} ref={inputEmailRef} size={'default'} /><br />
+                            <Input icon={typePassword.icon} type={typePassword.type} placeholder={'Пароль'} onChange={e => setValuePassword(e.target.value)} onIconClick={showPassword} value={valuePassword} name={'password'} ref={inputPasswordRef} size={'default'} /><br />
+                            <p className="text text_type_main-default">
+                                <span className={styles.button + " mr-10"} onClick={handleOnClick}>Отмена</span>
+                                <Button type="primary" size="medium">Сохранить</Button>
+                            </p>
+                        </form>
+                    </Route>
+                </Switch>
+            </div>
         </div>
     )
 }

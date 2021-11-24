@@ -1,13 +1,14 @@
 import React, {useCallback} from 'react';
 import styles from "./burger-construction.module.css";
 import {ConstructorElement, CurrencyIcon, Button} from "@ya.praktikum/react-developer-burger-ui-components";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch, useSelector} from '../../services/hooks';
 import {history, RootState} from "../../services/reducers";
 import { useDrop } from 'react-dnd';
 import {constructors} from "../../services/slices/constructors";
 import ConstructorItem from "./constructor-item";
 import update from 'immutability-helper';
 import {useLocation} from 'react-router-dom'
+import {TItem} from "../../types";
 
 export type TBurgerConstructorProps = {
     handleOpenModal: () => void
@@ -25,7 +26,7 @@ const BurgerConstructor:React.FC<TBurgerConstructorProps> = ({handleOpenModal}) 
     const [, drop] = useDrop(
         () => ({
             accept: 'items',
-            drop: (item) => {
+            drop: (item:TItem) => {
                 dispatch(constructors.actions.add(item))
             }
         })

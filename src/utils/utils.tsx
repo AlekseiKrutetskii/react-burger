@@ -1,6 +1,7 @@
 import {apiURL} from "./data";
+import {history} from "../services/reducers";
 
-export const checkReponse = (res) => {
+export const checkReponse = (res: Response) => {
     return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 };
 
@@ -13,15 +14,15 @@ export const refreshToken = () => {
         body: JSON.stringify({
             token: localStorage.getItem("refreshToken"),
         }),
-    }).then(checkReponse);
+    }).then((res) => checkReponse(res));
 };
 
 export const fetchWithRefresh = async (url, options) => {
     try {
         const res = await fetch(url, options);
         return await checkReponse(res);
-    } catch (err:any) {
-        if (err.message === "jwt expired") {
+    } catch (err) {
+        if (err instanceof Error && err.message === "jwt expired") {
             const refreshData = await refreshToken(); //обновляем токен
             localStorage.setItem("refreshToken", refreshData.refreshToken);
             setCookie("accessToken", refreshData.accessToken);
@@ -33,6 +34,45 @@ export const fetchWithRefresh = async (url, options) => {
         }
     }
 };
+
+export const forgotPassword = async (e, error:boolean, email:string) => {
+    e.preventDefault()
+    if (!error && email !== '') {
+        localStorage.setItem('forgot', 'yes')
+
+        await fetch('https://norma.nomoreparties.space/api/password-reset', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({email: email})
+        })
+        .then((res) => checkReponse(res))
+        .then(data => {
+            console.log(data.success?'ok':'error')
+            history.push('/reset-password')
+        })
+        .catch(() => console.log('some error'))
+    }
+}
+
+export const resetPassword = async (e, password, token) => {
+    e.preventDefault()
+    await fetch(apiURL+'password-reset/reset', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({password, token})
+    })
+    .then((res) => checkReponse(res))
+    .then(data => {
+        console.log(data)
+        localStorage.removeItem('forgot')
+        history.push('/login')
+    })
+    .catch(() => console.log('some error'))
+}
 
 // возвращает куки с указанным name,
 // или undefined, если ничего не найдено

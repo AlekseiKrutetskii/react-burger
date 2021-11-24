@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import styles from './ingredient-details.module.css'
 import { useParams } from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from '../../services/hooks';
 import {RootState} from "../../services/reducers";
-import {fetchIngredients} from "../../services/slices/ingredients";
 import {TEntity} from "../../types";
 
 type TRouteParams = {
@@ -11,15 +10,10 @@ type TRouteParams = {
 }
 
 const IngredientDetails:React.FC = () => {
-    const dispatch = useDispatch()
     const [ing, setIng] = useState<TEntity>()
     const data:Array<TEntity> = useSelector((store: RootState) => store.ingredients.entities)
     const isLoading = useSelector((store: RootState) => store.ingredients.loading)
     let { id } = useParams<TRouteParams>();
-
-    useEffect(()=>{
-        dispatch(fetchIngredients())
-    }, [dispatch])
 
     useEffect(()=>{
         data.filter(item => item._id === id).map(item =>
