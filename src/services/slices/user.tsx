@@ -113,7 +113,7 @@ export const user = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(registerUser.fulfilled, (state, action:PayloadAction<TUserPayload>) => {
-            console.log(action.payload);
+            //console.log(action.payload);
             state.data = action.payload.user
             if (action.payload.accessToken !== undefined) {
                 // Сохраняем токен в куку accessToken
@@ -144,7 +144,7 @@ export const user = createSlice({
             state.loading = 'loading'
         });
         builder.addCase(logoutUser.fulfilled, (state, action:PayloadAction<TUserPayload>) => {
-            console.log(action.payload)
+            //console.log(action.payload)
             if (action.payload.success) {
                 localStorage.removeItem("refreshToken");
                 deleteCookie('accessToken')
@@ -159,7 +159,7 @@ export const user = createSlice({
     },
 })
 
-const { actions, reducer } = user;
+const { actions } = user;
 export const userAction = user.actions;
 export const { setUserData } = actions;
-export default reducer;
+export default user.reducer;

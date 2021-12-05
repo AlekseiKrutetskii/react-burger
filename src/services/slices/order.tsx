@@ -80,4 +80,6 @@ export const order = createSlice({
     },
 })
 
+export default order.reducer;
 export const orderAction = order.actions;
+

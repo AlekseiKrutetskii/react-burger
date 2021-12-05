@@ -2,7 +2,8 @@ import React, {useCallback} from 'react';
 import styles from "./burger-construction.module.css";
 import {ConstructorElement, CurrencyIcon, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import {useDispatch, useSelector} from '../../services/hooks';
-import {history, RootState} from "../../services/reducers";
+import {RootState} from "../../services/reducers";
+import {history} from "../../services/reducers/history";
 import { useDrop } from 'react-dnd';
 import {constructors} from "../../services/slices/constructors";
 import ConstructorItem from "./constructor-item";
@@ -27,7 +28,8 @@ const BurgerConstructor:React.FC<TBurgerConstructorProps> = ({handleOpenModal}) 
         () => ({
             accept: 'items',
             drop: (item:TItem) => {
-                dispatch(constructors.actions.add(item))
+                var customId = "id_"+Math.random();
+                dispatch(constructors.actions.add({...item, customId}))
             }
         })
     )

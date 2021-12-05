@@ -45,3 +45,5 @@ export const ingredients = createSlice({
         })
     },
 })
+
+export default ingredients.reducer;

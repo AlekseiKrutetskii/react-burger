@@ -35,6 +35,9 @@ export const ordersList = createSlice({
         wsError: (state, action:PayloadAction<string>) => {
             state.status = WebsocketStatus.ONLINE
             state.connectionError = action.payload
+            state.orders = null
+            state.total = 0
+            state.totalToday = 0
         }
     }
 });

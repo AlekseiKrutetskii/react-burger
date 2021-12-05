@@ -2,16 +2,15 @@ import { combineReducers } from 'redux';
 import { ingredients } from '../slices/ingredients'
 import { current } from '../slices/current'
 import { order } from '../slices/order'
-import {constructors} from "../slices/constructors";
-import {user} from "../slices/user"
-import {connectRouter, routerMiddleware} from 'connected-react-router'
-import { createBrowserHistory } from 'history'
-import {configureStore} from "@reduxjs/toolkit";
-import {socketMiddleware} from "../middleware/orders-socket-middleware";
-import {ordersListActions, ordersListReducer} from "../slices/orders-list";
-import {connect, disconnect} from "../actions";
+import { constructors } from "../slices/constructors";
+import { user } from "../slices/user"
+import { connectRouter, routerMiddleware } from 'connected-react-router'
+import { configureStore } from "@reduxjs/toolkit";
+import { socketMiddleware } from "../middleware/orders-socket-middleware";
+import { ordersListActions, ordersListReducer } from "../slices/orders-list";
+import { connect, disconnect } from "../actions";
+import {history} from "./history";
 
-export const history = createBrowserHistory();
 
 export const rootReducer = combineReducers({
     ingredients: ingredients.reducer,
