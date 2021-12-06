@@ -25,7 +25,6 @@ export const constructors = createSlice({
     initialState,
     reducers: {
         add: (state, action:PayloadAction<TItem>) => {
-            var customId = "id_"+Math.random();
             var idis = state.items.map(item => item._id)
 
             if (action.payload.type === "bun") {
@@ -36,7 +35,7 @@ export const constructors = createSlice({
                     state.items.filter(item => item.type === "bun").map(item => state.count = state.count.filter(citem => citem._id !== item._id))
                     state.count.push({_id: action.payload._id, qty: 2})
                     state.items = state.items.filter(item => item.type !== "bun")
-                    state.items.unshift({...action.payload, customId})
+                    state.items.unshift(action.payload)
                 }
             } else {
                 (state.count.filter(item => item._id === action.payload._id).length > 0)
@@ -45,7 +44,7 @@ export const constructors = createSlice({
                         (item._id === action.payload._id) ? {...item, qty: ++item.qty} : item
                     )
                     : state.count.push({_id: action.payload._id, qty: 1})
-                state.items.push({...action.payload, customId})
+                state.items.push(action.payload)
             }
         },
         del: (state, action:PayloadAction<TLoadItem>) => {
@@ -71,3 +70,4 @@ export const constructors = createSlice({
 
 export const { add, del, update, clear } = constructors.actions;
 export const constructorsAction = constructors.actions;
+export default constructors.reducer;

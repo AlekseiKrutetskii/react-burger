@@ -16,7 +16,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { sendOrder } from "../../services/slices/order";
 import ProtectedRoute from "../protected-route/protected-route";
-import {history} from "../../services/reducers";
+import {history} from "../../services/reducers/history"
 import {TLocationState} from "../../types";
 import {FeedPage} from "../../pages/feed";
 import {Order} from "../order/order";

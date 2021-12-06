@@ -52,7 +52,7 @@ const BurgerIngredients:React.FC<TBurgerIngredientsProps> = ({handleOpenModal}) 
             <div className={styles['item-wrap']} onScroll={onScroll} ref={divWrap}>
                 <div className={styles.items} ref={divBun}>
                     <p className="text text_type_main-medium mb-6">Булки</p>
-                    <div className={`mb-10 pl-4 pr-4 ${styles['item-subwrap']}`}>
+                    <div data-testid="ingredients" className={`mb-10 pl-4 pr-4 ${styles['item-subwrap']}`}>
                         {data
                             .filter(item => item.type === 'bun')
                             .map(item =>

@@ -2,7 +2,8 @@ import React, {useCallback} from 'react';
 import styles from "./burger-construction.module.css";
 import {ConstructorElement, CurrencyIcon, Button} from "@ya.praktikum/react-developer-burger-ui-components";
 import {useDispatch, useSelector} from '../../services/hooks';
-import {history, RootState} from "../../services/reducers";
+import {RootState} from "../../services/reducers";
+import {history} from "../../services/reducers/history";
 import { useDrop } from 'react-dnd';
 import {constructors} from "../../services/slices/constructors";
 import ConstructorItem from "./constructor-item";
@@ -27,7 +28,8 @@ const BurgerConstructor:React.FC<TBurgerConstructorProps> = ({handleOpenModal}) 
         () => ({
             accept: 'items',
             drop: (item:TItem) => {
-                dispatch(constructors.actions.add(item))
+                var customId = "id_"+Math.random();
+                dispatch(constructors.actions.add({...item, customId}))
             }
         })
     )
@@ -53,7 +55,7 @@ const BurgerConstructor:React.FC<TBurgerConstructorProps> = ({handleOpenModal}) 
     }
 
     return (
-        <section className={`pt-25 ${styles.ingredients}`} ref={drop}>
+        <section data-testid="constructor" className={`pt-25 ${styles.ingredients}`} ref={drop}>
             {
                 data.filter(item => item.type === 'bun').map((item) => {
                     return (<div key={item.customId +'top'} className="ml-8 mb-4"><ConstructorElement type="top" isLocked={true} text={item.name + ' (верх)'} price={item.price} thumbnail={item.image} /></div>)
@@ -74,8 +76,8 @@ const BurgerConstructor:React.FC<TBurgerConstructorProps> = ({handleOpenModal}) 
                     {amount} <CurrencyIcon type="primary" />
                 </span>
                 {
-                    isAuth ? <Button type="primary" size="large" onClick={handleOpenModal}>Оформить заказ</Button>
-                    :<Button type="primary" size="large" onClick={()=>{history.push('/login', {from: location})}}>Оформить заказ</Button>
+                    isAuth ? <Button data-testid="authprofile" type="primary" size="large" onClick={handleOpenModal}>Оформить заказ</Button>
+                    :<Button data-testid="profile" type="primary" size="large" onClick={()=>{history.push('/login', {from: location})}}>Оформить заказ</Button>
                 }
             </div>
         </section>

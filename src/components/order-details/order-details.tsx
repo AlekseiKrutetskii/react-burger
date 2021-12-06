@@ -22,7 +22,7 @@ const OrderDetails:React.FC = () => {
 
     return (
         <div className={styles.wrap}>
-            <span className="text text_type_digits-large">{number}</span>
+            <span data-testid="number" className="text text_type_digits-large">{number}</span>
             <span className="text text_type_main-default mt-8 mb-15">идентификатор заказа</span>
             <CheckMarkIcon type="primary" />
             <span className={styles.text + " text text_type_main-default mt-15"}>Ваш заказ начали готовить</span>

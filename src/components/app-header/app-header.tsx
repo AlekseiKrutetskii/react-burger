@@ -12,7 +12,7 @@ const AppHeader = () => {
         <header className={`pt-4 pb-4 ${styles.header}`}>
             <nav>
                 <ul className={styles.nav}>
-                    <li className="mr-2"><Link to="/" className={`pl-5 pr-5 ${styles['nav-item']}`}><BurgerIcon type={isConstructor?'primary':'secondary'} /><span className={`pl-2 text text_type_main-default ${isConstructor?'':' text_color_inactive'}`}>Конструктор</span></Link></li>
+                    <li className="mr-2"><Link data-testid="mainpage" to="/" className={`pl-5 pr-5 ${styles['nav-item']}`}><BurgerIcon type={isConstructor?'primary':'secondary'} /><span className={`pl-2 text text_type_main-default ${isConstructor?'':' text_color_inactive'}`}>Конструктор</span></Link></li>
                     <li><Link to="/feed/" className={`pl-5 pr-5 ${styles['nav-item']}`}><ListIcon type={isFeed?'primary':'secondary'} /><span className={`pl-2 text text_type_main-default ${isFeed?'':' text_color_inactive'}`}>Лента заказов</span></Link></li>
                 </ul>
             </nav>

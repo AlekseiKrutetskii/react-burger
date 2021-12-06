@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 
 import { Provider } from 'react-redux';
 import {store} from "./services/reducers";
-import {history} from "./services/reducers";
+import {history} from "./services/reducers/history";
 import {getUser} from "./services/slices/user";
 import {ConnectedRouter} from "connected-react-router";
 
