@@ -60,7 +60,7 @@ export const LoginPage = () => {
             <form onSubmit={onSubmitHandle} className={styles.form}>
                 <Input type={'text'} placeholder={'E-mail'} onChange={e => setValueEmail(e.target.value)} value={valueEmail} name={'email'} ref={inputEmailRef} size={'default'} /><br />
                 <Input icon={typePassword.icon} type={typePassword.type} placeholder={'Пароль'} onChange={e => setValuePassword(e.target.value)} onIconClick={showPassword} value={valuePassword} name={'password'} ref={inputPasswordRef} size={'default'} /><br />
-                <Button type="primary" size="medium">Войти</Button>
+                <Button data-testid="singin" type="primary" size="medium">Войти</Button>
             </form>
             <p className="text text_type_main-default pt-20">Вы - новый пользователь? <Link className={styles.link} to={{ pathname: `/register/` }}>Зарегистрироваться</Link></p>
             <p className="text text_type_main-default">Забыли пароль? <Link className={styles.link} to={{ pathname: `/forgot-password/` }}>Восстановить пароль</Link></p>
